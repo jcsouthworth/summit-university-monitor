@@ -4,16 +4,332 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Summit-University Neighborhood Monitor</title>
+  <meta name="description" content="Government action monitor for Summit-University and adjacent Saint Paul neighborhoods." />
   <style>
-    body { font-family: system-ui, sans-serif; max-width: 600px; margin: 4rem auto; padding: 0 1rem; color: #333; }
-    h1 { color: #1a3a6b; }
-    p { line-height: 1.6; }
-    code { background: #f0f1f3; padding: 0.1rem 0.4rem; border-radius: 3px; font-size: 0.9em; }
+    /* ── Reset & base ───────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      color: #1a1a1a;
+      background: #f4f5f7;
+    }
+    a { color: #1a56a0; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Header ─────────────────────────────────────── */
+    header {
+      background: #1a3a6b;
+      color: #fff;
+      padding: 1.25rem 1.5rem;
+    }
+    header h1 { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.01em; }
+    header .subtitle {
+      font-size: 0.85rem;
+      opacity: 0.75;
+      margin-top: 0.2rem;
+    }
+    header .meta {
+      font-size: 0.78rem;
+      opacity: 0.6;
+      margin-top: 0.5rem;
+    }
+    header a { color: #9ec5f5; }
+
+    /* ── Layout ─────────────────────────────────────── */
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.25rem 1rem 3rem;
+    }
+
+    /* ── Stats bar ──────────────────────────────────── */
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+    .stat-pill {
+      background: #fff;
+      border: 1px solid #dde2e8;
+      border-radius: 999px;
+      padding: 0.3rem 0.85rem;
+      font-size: 0.82rem;
+      color: #555;
+    }
+    .stat-pill strong { color: #1a1a1a; }
+    .stat-pill.alert { background: #fff3cd; border-color: #ffc107; color: #7a5c00; }
+    .stat-pill.alert strong { color: #7a5c00; }
+
+    /* ── Flagged section ────────────────────────────── */
+    .flagged-section {
+      background: #fff8e6;
+      border: 1.5px solid #f0a500;
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+    .flagged-section h2 {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #7a5c00;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+    .flagged-section .flag-icon { margin-right: 0.3rem; }
+
+    /* ── Filter bar ─────────────────────────────────── */
+    .filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .filter-bar label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #555;
+      margin-right: 0.2rem;
+    }
+    .filter-bar select {
+      font-size: 0.82rem;
+      border: 1px solid #ccd0d5;
+      border-radius: 5px;
+      padding: 0.3rem 0.6rem;
+      background: #fff;
+      color: #1a1a1a;
+      cursor: pointer;
+    }
+    .filter-bar input[type="text"] {
+      font-size: 0.82rem;
+      border: 1px solid #ccd0d5;
+      border-radius: 5px;
+      padding: 0.3rem 0.6rem;
+      background: #fff;
+      color: #1a1a1a;
+      width: 200px;
+    }
+    .result-count {
+      margin-left: auto;
+      font-size: 0.8rem;
+      color: #777;
+    }
+
+    /* ── Item cards ─────────────────────────────────── */
+    .item-list { display: flex; flex-direction: column; gap: 0.6rem; }
+
+    .item-card {
+      background: #fff;
+      border: 1px solid #dde2e8;
+      border-radius: 7px;
+      padding: 0.85rem 1rem;
+      transition: box-shadow 0.1s;
+    }
+    .item-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .item-card.is-flagged {
+      border-left: 4px solid #f0a500;
+    }
+
+    .item-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .item-title {
+      font-size: 0.93rem;
+      font-weight: 600;
+      flex: 1;
+      min-width: 200px;
+    }
+    .item-title a { color: #1a1a1a; }
+    .item-title a:hover { color: #1a56a0; text-decoration: underline; }
+
+    .badges { display: flex; gap: 0.35rem; flex-wrap: wrap; align-items: center; }
+
+    .badge {
+      font-size: 0.7rem;
+      font-weight: 600;
+      border-radius: 4px;
+      padding: 0.15rem 0.45rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+    .badge-permit   { background: #e8f4fd; color: #0d6395; }
+    .badge-hearing  { background: #edf7ee; color: #1a6b2a; }
+    .badge-road     { background: #fff0e6; color: #8a4000; }
+    .badge-funding  { background: #f3eeff; color: #5a1fa0; }
+    .badge-source   { background: #f0f1f3; color: #444; font-weight: 500; }
+    .badge-flagged  { background: #ffc107; color: #5c3d00; }
+
+    .item-meta {
+      font-size: 0.78rem;
+      color: #777;
+      margin-top: 0.35rem;
+    }
+    .item-desc {
+      font-size: 0.82rem;
+      color: #444;
+      margin-top: 0.4rem;
+      line-height: 1.45;
+    }
+    .item-flag-reasons {
+      font-size: 0.75rem;
+      color: #7a5c00;
+      margin-top: 0.3rem;
+      font-style: italic;
+    }
+
+    /* ── Empty state ────────────────────────────────── */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #888;
+    }
+    .empty-state p { font-size: 0.9rem; }
+
+    /* ── Footer ─────────────────────────────────────── */
+    footer {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #999;
+      padding: 1.5rem 1rem;
+      border-top: 1px solid #dde2e8;
+      margin-top: 2rem;
+    }
+    footer a { color: #888; }
+
+    /* ── Responsive ─────────────────────────────────── */
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.1rem; }
+      .filter-bar { flex-direction: column; align-items: stretch; }
+      .filter-bar input[type="text"] { width: 100%; }
+      .result-count { margin-left: 0; }
+    }
   </style>
 </head>
 <body>
+
+<header>
   <h1>Summit-University Neighborhood Monitor</h1>
-  <p>This dashboard is not yet populated. Run <code>python run.py</code> to generate the dashboard for the first time.</p>
-  <p>Once the GitHub Actions workflow is set up, this page will be automatically updated every day.</p>
+  <div class="subtitle">Summit University Planning Council · Saint Paul, MN</div>
+  <div class="meta">
+    Last updated: <time datetime="2026-02-25T23:21:02Z">February 25, 2026 at 11:21 PM UTC</time>
+    &nbsp;·&nbsp;
+    <a href="https://www.summituniversityplanningcouncil.org" target="_blank" rel="noopener">Summit University Planning Council</a>
+  </div>
+</header>
+
+<main>
+
+  <!-- Stats bar -->
+  <div class="stats" aria-label="Summary statistics">
+    <div class="stat-pill ">
+      &#9873; <strong>0</strong> flagged
+    </div>
+    <div class="stat-pill"><strong>0</strong> total items</div>
+    <div class="stat-pill"><strong>0</strong> permits</div>
+    <div class="stat-pill"><strong>0</strong> hearings</div>
+    <div class="stat-pill"><strong>0</strong> road/infra</div>
+    <div class="stat-pill"><strong>0</strong> funding</div>
+  </div>
+
+  <!-- Flagged items section -->
+  
+  
+
+  <!-- Filter bar -->
+  <div class="filter-bar" role="search" aria-label="Filter items">
+    <div>
+      <label for="search-input">Search</label>
+      <input
+        type="text"
+        id="search-input"
+        placeholder="address, keyword..."
+        oninput="applyFilters()"
+        aria-label="Search items"
+      />
+    </div>
+    <div>
+      <label for="cat-filter">Category</label>
+      <select id="cat-filter" onchange="applyFilters()" aria-label="Filter by category">
+        <option value="">All categories</option>
+        
+      </select>
+    </div>
+    <div>
+      <label for="src-filter">Source</label>
+      <select id="src-filter" onchange="applyFilters()" aria-label="Filter by source">
+        <option value="">All sources</option>
+        
+      </select>
+    </div>
+    <div>
+      <label for="flag-filter">Show</label>
+      <select id="flag-filter" onchange="applyFilters()" aria-label="Filter flagged status">
+        <option value="">All items</option>
+        <option value="flagged">Flagged only</option>
+        <option value="unflagged">Not flagged</option>
+      </select>
+    </div>
+    <span class="result-count" id="result-count" aria-live="polite"></span>
+  </div>
+
+  <!-- All items list -->
+  <div class="item-list" id="item-list" aria-label="All government action items">
+    
+  </div>
+
+  
+  <div class="empty-state">
+    <p>No items found for the target neighborhoods. The scrapers may still be warming up,<br>
+    or there may be no current activity to report.</p>
+  </div>
+  
+
+</main>
+
+<footer>
+  Data sourced from City of Saint Paul, Ramsey County, MnDOT, and Metro Transit public records.
+  &nbsp;·&nbsp;
+  <a href="https://www.summituniversityplanningcouncil.org" target="_blank" rel="noopener">Summit University Planning Council</a>
+  &nbsp;·&nbsp;
+  <a href="https://github.com/summituniversityplanningcouncil/neighborhood-monitor" target="_blank" rel="noopener">View on GitHub</a>
+</footer>
+
+<script>
+  // ── Client-side filtering (no dependencies) ──────────────────────────────
+  function applyFilters() {
+    const search   = document.getElementById("search-input").value.toLowerCase();
+    const cat      = document.getElementById("cat-filter").value.toLowerCase();
+    const src      = document.getElementById("src-filter").value;
+    const flagged  = document.getElementById("flag-filter").value;
+    const cards    = document.querySelectorAll("#item-list .item-card");
+
+    let visible = 0;
+    cards.forEach(card => {
+      const matchSearch   = !search   || card.dataset.searchable.includes(search);
+      const matchCat      = !cat      || card.dataset.category === cat;
+      const matchSrc      = !src      || card.dataset.source === src;
+      const matchFlagged  = !flagged  || card.dataset.flagged === flagged;
+
+      const show = matchSearch && matchCat && matchSrc && matchFlagged;
+      card.style.display = show ? "" : "none";
+      if (show) visible++;
+    });
+
+    const countEl = document.getElementById("result-count");
+    countEl.textContent = `Showing ${visible} of ${cards.length} items`;
+  }
+
+  // Initialize count on load
+  document.addEventListener("DOMContentLoaded", applyFilters);
+</script>
+
 </body>
 </html>
