@@ -66,9 +66,19 @@ def main():
             logger.info("  → %d items from %s", len(items), name)
             all_items.extend(items)
         except Exception as e:
-            logger.error("Scraper %s failed: %s", name, e, exc_info=args.verbose)
+            logger.error("Scraper %s failed: %s", name, e, exc_info=True)
 
     logger.info("Total fetched: %d items", len(all_items))
+
+    # Guard: if every scraper returned 0 items, something is wrong (likely a
+    # transient network failure). Preserve the existing dashboard rather than
+    # overwriting it with an empty page.
+    if not all_items:
+        logger.error(
+            "All scrapers returned 0 items — possible network outage or API "
+            "failure. Keeping existing dashboard unchanged."
+        )
+        sys.exit(1)
 
     # ── Step 2: Deduplicate by URL ────────────────────────────────────────────
     seen: set[str] = set()
