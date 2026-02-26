@@ -71,6 +71,7 @@ def build(items: list[dict], config: dict) -> Path:
         config=config,
         last_updated=now_utc.strftime("%B %d, %Y at %I:%M %p UTC"),
         last_updated_iso=now_utc.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        today_iso=now_utc.strftime("%Y-%m-%d"),
         dashboard=config.get("dashboard", {}),
     )
 

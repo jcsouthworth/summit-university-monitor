@@ -15,7 +15,7 @@ from pathlib import Path
 
 import yaml
 
-from scrapers import granicus
+from scrapers import granicus, legistar
 from pipeline import filter as geo_filter, flag, generate
 
 # ── Logging setup ─────────────────────────────────────────────────────────────
@@ -29,6 +29,7 @@ logger = logging.getLogger("run")
 # ── Scraper registry ──────────────────────────────────────────────────────────
 SCRAPERS = {
     "granicus": granicus.fetch,
+    "legistar": legistar.fetch,
 }
 
 

@@ -79,7 +79,6 @@
       letter-spacing: 0.05em;
       margin-bottom: 0.75rem;
     }
-    .flagged-section .flag-icon { margin-right: 0.3rem; }
 
     /* ── Filter bar ─────────────────────────────────── */
     .filter-bar {
@@ -113,6 +112,12 @@
       color: #1a1a1a;
       width: 200px;
     }
+    /* Highlight the time selector to make it prominent */
+    #time-filter {
+      border-color: #1a56a0;
+      font-weight: 600;
+      color: #1a3a6b;
+    }
     .result-count {
       margin-left: auto;
       font-size: 0.8rem;
@@ -130,9 +135,8 @@
       transition: box-shadow 0.1s;
     }
     .item-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-    .item-card.is-flagged {
-      border-left: 4px solid #f0a500;
-    }
+    .item-card.is-flagged { border-left: 4px solid #f0a500; }
+    .item-card.is-past { opacity: 0.6; }
 
     .item-header {
       display: flex;
@@ -166,6 +170,7 @@
     .badge-funding  { background: #f3eeff; color: #5a1fa0; }
     .badge-source   { background: #f0f1f3; color: #444; font-weight: 500; }
     .badge-flagged  { background: #ffc107; color: #5c3d00; }
+    .badge-past     { background: #e8e8e8; color: #666; }
 
     .item-meta {
       font-size: 0.78rem;
@@ -225,6 +230,9 @@
   </div>
 </header>
 
+<!-- Embed today's date for JS date comparison -->
+<script>const TODAY = "{{ today_iso }}";</script>
+
 <main>
 
   <!-- Stats bar -->
@@ -233,8 +241,8 @@
       &#9873; <strong>{{ stats.flagged }}</strong> flagged
     </div>
     <div class="stat-pill"><strong>{{ stats.total }}</strong> total items</div>
-    <div class="stat-pill"><strong>{{ stats.permits }}</strong> permits</div>
     <div class="stat-pill"><strong>{{ stats.hearings }}</strong> hearings</div>
+    <div class="stat-pill"><strong>{{ stats.permits }}</strong> permits</div>
     <div class="stat-pill"><strong>{{ stats.roads }}</strong> road/infra</div>
     <div class="stat-pill"><strong>{{ stats.funding }}</strong> funding</div>
   </div>
@@ -246,7 +254,26 @@
     <h2>&#9873; Needs Attention ({{ flagged_items | length }})</h2>
     <div class="item-list">
       {% for item in flagged_items %}
-      {{ _render_card(item) }}
+      <div class="item-card is-flagged" data-date="{{ item.date }}">
+        <div class="item-header">
+          <div class="item-title">
+            {% if item.url %}<a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.title }}</a>
+            {% else %}{{ item.title }}{% endif %}
+          </div>
+          <div class="badges">
+            <span class="badge badge-flagged">&#9873; Flagged</span>
+            {% if item.category %}<span class="badge badge-{{ item.category }}">{{ item.category | title }}</span>{% endif %}
+            {% if item.source %}<span class="badge badge-source">{{ item.source }}</span>{% endif %}
+          </div>
+        </div>
+        <div class="item-meta">
+          {% if item.date %}{{ item.date }}{% endif %}
+          {% if item.address %} &nbsp;·&nbsp; {{ item.address }}{% endif %}
+        </div>
+        {% if item.flag_reasons %}
+        <div class="item-flag-reasons">Flagged for: {{ item.flag_reasons | join(", ") }}</div>
+        {% endif %}
+      </div>
       {% endfor %}
     </div>
   </section>
@@ -259,18 +286,17 @@
       <input
         type="text"
         id="search-input"
-        placeholder="address, keyword..."
+        placeholder="keyword, body name..."
         oninput="applyFilters()"
         aria-label="Search items"
       />
     </div>
     <div>
-      <label for="cat-filter">Category</label>
-      <select id="cat-filter" onchange="applyFilters()" aria-label="Filter by category">
-        <option value="">All categories</option>
-        {% for cat in categories %}
-        <option value="{{ cat }}">{{ cat | title }}</option>
-        {% endfor %}
+      <label for="time-filter">Time</label>
+      <select id="time-filter" onchange="applyFilters()" aria-label="Filter by time">
+        <option value="upcoming">Upcoming only</option>
+        <option value="past">Past only</option>
+        <option value="">All meetings</option>
       </select>
     </div>
     <div>
@@ -283,9 +309,18 @@
       </select>
     </div>
     <div>
-      <label for="flag-filter">Show</label>
+      <label for="cat-filter">Category</label>
+      <select id="cat-filter" onchange="applyFilters()" aria-label="Filter by category">
+        <option value="">All categories</option>
+        {% for cat in categories %}
+        <option value="{{ cat }}">{{ cat | title }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label for="flag-filter">Flagged</label>
       <select id="flag-filter" onchange="applyFilters()" aria-label="Filter flagged status">
-        <option value="">All items</option>
+        <option value="">All</option>
         <option value="flagged">Flagged only</option>
         <option value="unflagged">Not flagged</option>
       </select>
@@ -301,6 +336,7 @@
       data-category="{{ item.category | lower }}"
       data-source="{{ item.source }}"
       data-flagged="{{ 'flagged' if item.flagged else 'unflagged' }}"
+      data-date="{{ item.date }}"
       data-searchable="{{ [item.title, item.description, item.address] | join(' ') | lower }}"
     >
       <div class="item-header">
@@ -341,38 +377,50 @@
 
   {% if not items %}
   <div class="empty-state">
-    <p>No items found for the target neighborhoods. The scrapers may still be warming up,<br>
-    or there may be no current activity to report.</p>
+    <p>No items found. Try running the workflow from the GitHub Actions tab.</p>
   </div>
   {% endif %}
 
 </main>
 
 <footer>
-  Data sourced from City of Saint Paul, Ramsey County, MnDOT, and Metro Transit public records.
+  Data sourced from Saint Paul Planning Commission (Granicus) and Saint Paul Legistar.
   &nbsp;·&nbsp;
   <a href="{{ dashboard.council_url }}" target="_blank" rel="noopener">Summit University Planning Council</a>
   &nbsp;·&nbsp;
-  <a href="https://github.com/summituniversityplanningcouncil/neighborhood-monitor" target="_blank" rel="noopener">View on GitHub</a>
+  <a href="https://github.com/jcsouthworth/summit-university-monitor" target="_blank" rel="noopener">View on GitHub</a>
 </footer>
 
 <script>
-  // ── Client-side filtering (no dependencies) ──────────────────────────────
+  // ── Client-side filtering ─────────────────────────────────────────────────
   function applyFilters() {
-    const search   = document.getElementById("search-input").value.toLowerCase();
-    const cat      = document.getElementById("cat-filter").value.toLowerCase();
-    const src      = document.getElementById("src-filter").value;
-    const flagged  = document.getElementById("flag-filter").value;
-    const cards    = document.querySelectorAll("#item-list .item-card");
+    const search  = document.getElementById("search-input").value.toLowerCase();
+    const time    = document.getElementById("time-filter").value;   // "upcoming" | "past" | ""
+    const src     = document.getElementById("src-filter").value;
+    const cat     = document.getElementById("cat-filter").value.toLowerCase();
+    const flagged = document.getElementById("flag-filter").value;
+    const cards   = document.querySelectorAll("#item-list .item-card");
 
     let visible = 0;
     cards.forEach(card => {
-      const matchSearch   = !search   || card.dataset.searchable.includes(search);
-      const matchCat      = !cat      || card.dataset.category === cat;
-      const matchSrc      = !src      || card.dataset.source === src;
-      const matchFlagged  = !flagged  || card.dataset.flagged === flagged;
+      const cardDate = card.dataset.date || "";
 
-      const show = matchSearch && matchCat && matchSrc && matchFlagged;
+      // Date comparison: YYYY-MM-DD strings sort lexicographically
+      const isPast     = cardDate && cardDate < TODAY;
+      const isUpcoming = cardDate && cardDate >= TODAY;
+
+      const matchTime    = !time
+                           || (time === "upcoming" && isUpcoming)
+                           || (time === "past"     && isPast);
+      const matchSearch  = !search  || card.dataset.searchable.includes(search);
+      const matchSrc     = !src     || card.dataset.source === src;
+      const matchCat     = !cat     || card.dataset.category === cat;
+      const matchFlagged = !flagged || card.dataset.flagged === flagged;
+
+      // Visually dim past items even when shown
+      card.classList.toggle("is-past", !!isPast);
+
+      const show = matchTime && matchSearch && matchSrc && matchCat && matchFlagged;
       card.style.display = show ? "" : "none";
       if (show) visible++;
     });
@@ -381,7 +429,7 @@
     countEl.textContent = `Showing ${visible} of ${cards.length} items`;
   }
 
-  // Initialize count on load
+  // Default: show upcoming only on page load
   document.addEventListener("DOMContentLoaded", applyFilters);
 </script>
 

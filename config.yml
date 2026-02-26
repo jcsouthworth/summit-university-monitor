@@ -58,6 +58,12 @@ sources:
     # RSS feed — agenda-published meetings (most reliable source)
     rss_url: "https://stpaul.granicus.com/ViewPublisherRSS.php?view_id=56&mode=agendas"
 
+  legistar:
+    enabled: true
+    label: "Saint Paul Legistar"
+    # City of Saint Paul municipal calendar (City Council, committees, boards, etc.)
+    calendar_url: "https://stpaul.legistar.com/Calendar.aspx"
+
 # ── Dashboard display ─────────────────────────────────
 dashboard:
   title: "Summit-University Neighborhood Monitor"
