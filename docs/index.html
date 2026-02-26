@@ -63,23 +63,6 @@
     .stat-pill.alert { background: #fff3cd; border-color: #ffc107; color: #7a5c00; }
     .stat-pill.alert strong { color: #7a5c00; }
 
-    /* ── Flagged section ────────────────────────────── */
-    .flagged-section {
-      background: #fff8e6;
-      border: 1.5px solid #f0a500;
-      border-radius: 8px;
-      padding: 1rem 1.25rem;
-      margin-bottom: 1.5rem;
-    }
-    .flagged-section h2 {
-      font-size: 0.92rem;
-      font-weight: 700;
-      color: #7a5c00;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 0.75rem;
-    }
-
     /* ── Filter bar ─────────────────────────────────── */
     .filter-bar {
       display: flex;
@@ -135,7 +118,6 @@
       transition: box-shadow 0.1s;
     }
     .item-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-    .item-card.is-flagged { border-left: 4px solid #f0a500; }
     .item-card.is-past { opacity: 0.6; }
 
     .item-header {
@@ -169,7 +151,6 @@
     .badge-road     { background: #fff0e6; color: #8a4000; }
     .badge-funding  { background: #f3eeff; color: #5a1fa0; }
     .badge-source   { background: #f0f1f3; color: #444; font-weight: 500; }
-    .badge-flagged  { background: #ffc107; color: #5c3d00; }
     .badge-past     { background: #e8e8e8; color: #666; }
 
     .item-meta {
@@ -183,13 +164,6 @@
       margin-top: 0.4rem;
       line-height: 1.45;
     }
-    .item-flag-reasons {
-      font-size: 0.75rem;
-      color: #7a5c00;
-      margin-top: 0.3rem;
-      font-style: italic;
-    }
-
     /* ── Empty state ────────────────────────────────── */
     .empty-state {
       text-align: center;
@@ -224,7 +198,7 @@
   <h1>Summit-University Neighborhood Monitor</h1>
   <div class="subtitle">Summit University Planning Council · Saint Paul, MN</div>
   <div class="meta">
-    Last updated: <time datetime="2026-02-26T02:19:41Z">February 26, 2026 at 02:19 AM UTC</time>
+    Last updated: <time datetime="2026-02-26T02:29:36Z">February 26, 2026 at 02:29 AM UTC</time>
     &nbsp;·&nbsp;
     <a href="https://www.summituniversityplanningcouncil.org" target="_blank" rel="noopener">Summit University Planning Council</a>
   </div>
@@ -237,131 +211,12 @@
 
   <!-- Stats bar -->
   <div class="stats" aria-label="Summary statistics">
-    <div class="stat-pill alert">
-      &#9873; <strong>5</strong> flagged
-    </div>
-    <div class="stat-pill"><strong>113</strong> total items</div>
-    <div class="stat-pill"><strong>113</strong> hearings</div>
+    <div class="stat-pill"><strong>110</strong> total items</div>
+    <div class="stat-pill"><strong>110</strong> hearings</div>
     <div class="stat-pill"><strong>0</strong> permits</div>
     <div class="stat-pill"><strong>0</strong> road/infra</div>
     <div class="stat-pill"><strong>0</strong> funding</div>
   </div>
-
-  <!-- Flagged items section -->
-  
-  
-  <section class="flagged-section" aria-label="Flagged items needing attention">
-    <h2>&#9873; Needs Attention (5)</h2>
-    <div class="item-list">
-      
-      <div class="item-card is-flagged" data-date="2026-02-18">
-        <div class="item-header">
-          <div class="item-title">
-            <a href="https://stpaul.legistar.com/LegislationDetail.aspx?ID=51122&amp;GUID=9C11BEF8-60E5-4D83-9C34-C50EEB0D6B5E&amp;Options=&amp;Search=" target="_blank" rel="noopener">RLH TA 26-8 — 720 Snelling Ave N</a>
-            
-          </div>
-          <div class="badges">
-            <span class="badge badge-flagged">&#9873; Flagged</span>
-            <span class="badge badge-hearing">Hearing</span>
-            <span class="badge badge-source">Saint Paul Legistar</span>
-          </div>
-        </div>
-        <div class="item-meta">
-          2026-02-18
-           &nbsp;·&nbsp; 720 Snelling Ave
-        </div>
-        
-        <div class="item-flag-reasons">Flagged for: appeal</div>
-        
-      </div>
-      
-      <div class="item-card is-flagged" data-date="2026-02-18">
-        <div class="item-header">
-          <div class="item-title">
-            <a href="https://stpaul.legistar.com/LegislationDetail.aspx?ID=51149&amp;GUID=EC620792-BD20-40C7-A85E-6416A7BC2C6E&amp;Options=&amp;Search=" target="_blank" rel="noopener">RLH TA 26-13 — 1084 Selby Ave</a>
-            
-          </div>
-          <div class="badges">
-            <span class="badge badge-flagged">&#9873; Flagged</span>
-            <span class="badge badge-hearing">Hearing</span>
-            <span class="badge badge-source">Saint Paul Legistar</span>
-          </div>
-        </div>
-        <div class="item-meta">
-          2026-02-18
-           &nbsp;·&nbsp; 1084 Selby Ave
-        </div>
-        
-        <div class="item-flag-reasons">Flagged for: appeal</div>
-        
-      </div>
-      
-      <div class="item-card is-flagged" data-date="2026-02-04">
-        <div class="item-header">
-          <div class="item-title">
-            <a href="https://stpaul.legistar.com/LegislationDetail.aspx?ID=50997&amp;GUID=10F73813-6A7D-4166-A9AD-537F162D593C&amp;Options=&amp;Search=" target="_blank" rel="noopener">RES PH 26-28 — Authorizing the City to accept a $500,000 grant from the State to pay for Technology Rich Space improvements to the Rondo Community Library; authorizing the execution of a grant agreeme</a>
-            
-          </div>
-          <div class="badges">
-            <span class="badge badge-flagged">&#9873; Flagged</span>
-            <span class="badge badge-hearing">Hearing</span>
-            <span class="badge badge-source">Saint Paul Legistar</span>
-          </div>
-        </div>
-        <div class="item-meta">
-          2026-02-04
-          
-        </div>
-        
-        <div class="item-flag-reasons">Flagged for: public hearing</div>
-        
-      </div>
-      
-      <div class="item-card is-flagged" data-date="2026-02-04">
-        <div class="item-header">
-          <div class="item-title">
-            <a href="https://stpaul.legistar.com/LegislationDetail.aspx?ID=49842&amp;GUID=09EB14C2-9A1B-4B02-B317-43F7ECFF2E7B&amp;Options=&amp;Search=" target="_blank" rel="noopener">RLH TA 25-294 — 427 Aurora Ave</a>
-            
-          </div>
-          <div class="badges">
-            <span class="badge badge-flagged">&#9873; Flagged</span>
-            <span class="badge badge-hearing">Hearing</span>
-            <span class="badge badge-source">Saint Paul Legistar</span>
-          </div>
-        </div>
-        <div class="item-meta">
-          2026-02-04
-           &nbsp;·&nbsp; 427 Aurora Ave
-        </div>
-        
-        <div class="item-flag-reasons">Flagged for: appeal</div>
-        
-      </div>
-      
-      <div class="item-card is-flagged" data-date="2026-01-28">
-        <div class="item-header">
-          <div class="item-title">
-            <a href="https://stpaul.legistar.com/LegislationDetail.aspx?ID=50639&amp;GUID=CB8A4C22-B930-4C77-BBA4-BE2FC99724D5&amp;Options=&amp;Search=" target="_blank" rel="noopener">RES PH 26-6 — Final Order - Saint Anthony/Rondo Arterial Mill and Overlay</a>
-            
-          </div>
-          <div class="badges">
-            <span class="badge badge-flagged">&#9873; Flagged</span>
-            <span class="badge badge-hearing">Hearing</span>
-            <span class="badge badge-source">Saint Paul Legistar</span>
-          </div>
-        </div>
-        <div class="item-meta">
-          2026-01-28
-          
-        </div>
-        
-        <div class="item-flag-reasons">Flagged for: mill and overlay, final order, public hearing</div>
-        
-      </div>
-      
-    </div>
-  </section>
-  
 
   <!-- Filter bar -->
   <div class="filter-bar" role="search" aria-label="Filter items">
@@ -403,14 +258,6 @@
         
       </select>
     </div>
-    <div>
-      <label for="flag-filter">Flagged</label>
-      <select id="flag-filter" onchange="applyFilters()" aria-label="Filter flagged status">
-        <option value="">All</option>
-        <option value="flagged">Flagged only</option>
-        <option value="unflagged">Not flagged</option>
-      </select>
-    </div>
     <span class="result-count" id="result-count" aria-live="polite"></span>
   </div>
 
@@ -418,103 +265,19 @@
   <div class="item-list" id="item-list" aria-label="All government action items">
     
     <div
-      class="item-card is-flagged"
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Legistar"
-      data-flagged="flagged"
-      data-date="2026-02-18"
-      data-searchable="rlh ta 26-8 — 720 snelling ave n city council · resolution lh tax assessment appeal · passed · agenda item #42 720 snelling ave"
-    >
-      <div class="item-header">
-        <div class="item-title">
-          
-          <a href="https://stpaul.legistar.com/LegislationDetail.aspx?ID=51122&amp;GUID=9C11BEF8-60E5-4D83-9C34-C50EEB0D6B5E&amp;Options=&amp;Search=" target="_blank" rel="noopener">RLH TA 26-8 — 720 Snelling Ave N</a>
-          
-        </div>
-        <div class="badges">
-          
-          <span class="badge badge-flagged">&#9873; Flagged</span>
-          
-          
-          <span class="badge badge-hearing">Hearing</span>
-          
-          
-          <span class="badge badge-source">Saint Paul Legistar</span>
-          
-        </div>
-      </div>
-      <div class="item-meta">
-        2026-02-18
-         &nbsp;·&nbsp; 720 Snelling Ave
-      </div>
-      
-      <div class="item-desc">City Council · Resolution LH Tax Assessment Appeal · Passed · Agenda item #42</div>
-      
-      
-      <div class="item-flag-reasons">
-        Flagged for: appeal
-      </div>
-      
-    </div>
-    
-    <div
-      class="item-card is-flagged"
-      data-category="hearing"
-      data-source="Saint Paul Legistar"
-      data-flagged="flagged"
-      data-date="2026-02-18"
-      data-searchable="rlh ta 26-13 — 1084 selby ave city council · resolution lh tax assessment appeal · passed · agenda item #40 1084 selby ave"
-    >
-      <div class="item-header">
-        <div class="item-title">
-          
-          <a href="https://stpaul.legistar.com/LegislationDetail.aspx?ID=51149&amp;GUID=EC620792-BD20-40C7-A85E-6416A7BC2C6E&amp;Options=&amp;Search=" target="_blank" rel="noopener">RLH TA 26-13 — 1084 Selby Ave</a>
-          
-        </div>
-        <div class="badges">
-          
-          <span class="badge badge-flagged">&#9873; Flagged</span>
-          
-          
-          <span class="badge badge-hearing">Hearing</span>
-          
-          
-          <span class="badge badge-source">Saint Paul Legistar</span>
-          
-        </div>
-      </div>
-      <div class="item-meta">
-        2026-02-18
-         &nbsp;·&nbsp; 1084 Selby Ave
-      </div>
-      
-      <div class="item-desc">City Council · Resolution LH Tax Assessment Appeal · Passed · Agenda item #40</div>
-      
-      
-      <div class="item-flag-reasons">
-        Flagged for: appeal
-      </div>
-      
-    </div>
-    
-    <div
-      class="item-card is-flagged"
-      data-category="hearing"
-      data-source="Saint Paul Legistar"
-      data-flagged="flagged"
       data-date="2026-02-04"
       data-searchable="res ph 26-28 — authorizing the city to accept a $500,000 grant from the state to pay for technology rich space improvements to the rondo community library; authorizing the execution of a grant agreeme city council · resolution-public hearing · passed · agenda item #10 "
     >
       <div class="item-header">
         <div class="item-title">
           
-          <a href="https://stpaul.legistar.com/LegislationDetail.aspx?ID=50997&amp;GUID=10F73813-6A7D-4166-A9AD-537F162D593C&amp;Options=&amp;Search=" target="_blank" rel="noopener">RES PH 26-28 — Authorizing the City to accept a $500,000 grant from the State to pay for Technology Rich Space improvements to the Rondo Community Library; authorizing the execution of a grant agreeme</a>
+          <a href="https://stpaul.legistar.com/MeetingDetail.aspx?LEGID=7544&amp;GID=125&amp;G=EDAB5C5F-1041-4DF4-A894-59E957785E36" target="_blank" rel="noopener">RES PH 26-28 — Authorizing the City to accept a $500,000 grant from the State to pay for Technology Rich Space improvements to the Rondo Community Library; authorizing the execution of a grant agreeme</a>
           
         </div>
         <div class="badges">
-          
-          <span class="badge badge-flagged">&#9873; Flagged</span>
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -530,71 +293,22 @@
       
       <div class="item-desc">City Council · Resolution-Public Hearing · Passed · Agenda item #10</div>
       
-      
-      <div class="item-flag-reasons">
-        Flagged for: public hearing
-      </div>
-      
     </div>
     
     <div
-      class="item-card is-flagged"
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Legistar"
-      data-flagged="flagged"
-      data-date="2026-02-04"
-      data-searchable="rlh ta 25-294 — 427 aurora ave city council · resolution lh tax assessment appeal · passed · agenda item #22 427 aurora ave"
-    >
-      <div class="item-header">
-        <div class="item-title">
-          
-          <a href="https://stpaul.legistar.com/LegislationDetail.aspx?ID=49842&amp;GUID=09EB14C2-9A1B-4B02-B317-43F7ECFF2E7B&amp;Options=&amp;Search=" target="_blank" rel="noopener">RLH TA 25-294 — 427 Aurora Ave</a>
-          
-        </div>
-        <div class="badges">
-          
-          <span class="badge badge-flagged">&#9873; Flagged</span>
-          
-          
-          <span class="badge badge-hearing">Hearing</span>
-          
-          
-          <span class="badge badge-source">Saint Paul Legistar</span>
-          
-        </div>
-      </div>
-      <div class="item-meta">
-        2026-02-04
-         &nbsp;·&nbsp; 427 Aurora Ave
-      </div>
-      
-      <div class="item-desc">City Council · Resolution LH Tax Assessment Appeal · Passed · Agenda item #22</div>
-      
-      
-      <div class="item-flag-reasons">
-        Flagged for: appeal
-      </div>
-      
-    </div>
-    
-    <div
-      class="item-card is-flagged"
-      data-category="hearing"
-      data-source="Saint Paul Legistar"
-      data-flagged="flagged"
       data-date="2026-01-28"
       data-searchable="res ph 26-6 — final order - saint anthony/rondo arterial mill and overlay city council · resolution-public hearing · passed · agenda item #19 "
     >
       <div class="item-header">
         <div class="item-title">
           
-          <a href="https://stpaul.legistar.com/LegislationDetail.aspx?ID=50639&amp;GUID=CB8A4C22-B930-4C77-BBA4-BE2FC99724D5&amp;Options=&amp;Search=" target="_blank" rel="noopener">RES PH 26-6 — Final Order - Saint Anthony/Rondo Arterial Mill and Overlay</a>
+          <a href="https://stpaul.legistar.com/MeetingDetail.aspx?LEGID=7534&amp;GID=125&amp;G=EDAB5C5F-1041-4DF4-A894-59E957785E36" target="_blank" rel="noopener">RES PH 26-6 — Final Order - Saint Anthony/Rondo Arterial Mill and Overlay</a>
           
         </div>
         <div class="badges">
-          
-          <span class="badge badge-flagged">&#9873; Flagged</span>
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -610,29 +324,22 @@
       
       <div class="item-desc">City Council · Resolution-Public Hearing · Passed · Agenda item #19</div>
       
-      
-      <div class="item-flag-reasons">
-        Flagged for: mill and overlay, final order, public hearing
-      </div>
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Legistar"
-      data-flagged="unflagged"
       data-date="2026-02-24"
       data-searchable="rlh sao 26-11 — 1079 western ave n legislative hearings · resolution lh summary abatement order · agenda ready · agenda item #3 1079 western ave"
     >
       <div class="item-header">
         <div class="item-title">
           
-          <a href="https://stpaul.legistar.com/LegislationDetail.aspx?ID=51276&amp;GUID=4E219586-4376-4D04-88F5-623E8994D0DE&amp;Options=&amp;Search=" target="_blank" rel="noopener">RLH SAO 26-11 — 1079 Western Ave N</a>
+          <a href="https://stpaul.legistar.com/MeetingDetail.aspx?LEGID=7569&amp;GID=125&amp;G=EDAB5C5F-1041-4DF4-A894-59E957785E36" target="_blank" rel="noopener">RLH SAO 26-11 — 1079 Western Ave N</a>
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -648,14 +355,12 @@
       
       <div class="item-desc">Legislative Hearings · Resolution LH Summary Abatement Order · Agenda Ready · Agenda item #3</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2026-02-20"
       data-searchable="planning commission — feb 20, 2026 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -666,7 +371,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -682,25 +386,22 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Legistar"
-      data-flagged="unflagged"
       data-date="2026-02-18"
       data-searchable="res 26-273 — saw brewing - change of ownership application approval city council · resolution · passed · agenda item #8 1750 thomas ave"
     >
       <div class="item-header">
         <div class="item-title">
           
-          <a href="https://stpaul.legistar.com/LegislationDetail.aspx?ID=51388&amp;GUID=D235E38E-72BD-44FB-86EF-C8B120BAFA17&amp;Options=&amp;Search=" target="_blank" rel="noopener">RES 26-273 — SAW Brewing - Change of Ownership Application Approval</a>
+          <a href="https://stpaul.legistar.com/MeetingDetail.aspx?LEGID=7564&amp;GID=125&amp;G=EDAB5C5F-1041-4DF4-A894-59E957785E36" target="_blank" rel="noopener">RES 26-273 — SAW Brewing - Change of Ownership Application Approval</a>
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -716,25 +417,22 @@
       
       <div class="item-desc">City Council · Resolution · Passed · Agenda item #8</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Legistar"
-      data-flagged="unflagged"
       data-date="2026-02-10"
       data-searchable="rlh rr 26-2 — 799 university ave w remove/repair legislative hearings · resolution lh substantial abatement order · agenda ready · agenda item #1 799 university avenue west"
     >
       <div class="item-header">
         <div class="item-title">
           
-          <a href="https://stpaul.legistar.com/LegislationDetail.aspx?ID=51062&amp;GUID=17397D52-5118-4A7A-A7E5-38918E2E34A0&amp;Options=&amp;Search=" target="_blank" rel="noopener">RLH RR 26-2 — 799 University Ave W Remove/Repair</a>
+          <a href="https://stpaul.legistar.com/MeetingDetail.aspx?LEGID=7552&amp;GID=125&amp;G=EDAB5C5F-1041-4DF4-A894-59E957785E36" target="_blank" rel="noopener">RLH RR 26-2 — 799 University Ave W Remove/Repair</a>
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -750,14 +448,12 @@
       
       <div class="item-desc">Legislative Hearings · Resolution LH Substantial Abatement Order · Agenda Ready · Agenda item #1</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2026-02-06"
       data-searchable="planning commission — feb 06, 2026 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -768,7 +464,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -784,25 +479,22 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Legistar"
-      data-flagged="unflagged"
       data-date="2026-01-27"
       data-searchable="rlh rr 25-28 — 430 dale st n remove/repair legislative hearings · resolution lh substantial abatement order · passed · agenda item #1 430 dale st"
     >
       <div class="item-header">
         <div class="item-title">
           
-          <a href="https://stpaul.legistar.com/LegislationDetail.aspx?ID=50352&amp;GUID=57204863-69E9-4B3D-9667-3DD0F31ED1DC&amp;Options=&amp;Search=" target="_blank" rel="noopener">RLH RR 25-28 — 430 Dale St N Remove/Repair</a>
+          <a href="https://stpaul.legistar.com/MeetingDetail.aspx?LEGID=7533&amp;GID=125&amp;G=EDAB5C5F-1041-4DF4-A894-59E957785E36" target="_blank" rel="noopener">RLH RR 25-28 — 430 Dale St N Remove/Repair</a>
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -818,14 +510,12 @@
       
       <div class="item-desc">Legislative Hearings · Resolution LH Substantial Abatement Order · Passed · Agenda item #1</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2026-01-23"
       data-searchable="[canceled] planning commission — jan 23, 2026 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
@@ -836,7 +526,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -852,14 +541,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. This meeting was canceled. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2026-01-09"
       data-searchable="planning commission — jan 09, 2026 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -870,7 +557,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -886,14 +572,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2025-12-19"
       data-searchable="[canceled] planning commission — dec 19, 2025 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
@@ -904,7 +588,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -920,14 +603,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. This meeting was canceled. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2025-12-05"
       data-searchable="planning commission — dec 05, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -938,7 +619,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -954,14 +634,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2025-11-14"
       data-searchable="planning commission — nov 14, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -972,7 +650,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -988,14 +665,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2025-10-31"
       data-searchable="[canceled] planning commission — oct 31, 2025 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
@@ -1006,7 +681,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -1022,14 +696,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. This meeting was canceled. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2025-10-17"
       data-searchable="planning commission — oct 17, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -1040,7 +712,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -1056,14 +727,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2025-10-09"
       data-searchable="[special] planning commission — oct 09, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -1074,7 +743,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -1090,14 +758,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2025-10-03"
       data-searchable="[canceled] planning commission — oct 03, 2025 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
@@ -1108,7 +774,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -1124,14 +789,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. This meeting was canceled. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2025-09-19"
       data-searchable="planning commission — sep 19, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -1142,7 +805,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -1158,14 +820,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2025-09-05"
       data-searchable="planning commission — sep 05, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -1176,7 +836,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -1192,14 +851,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2025-08-22"
       data-searchable="planning commission — aug 22, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -1210,7 +867,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -1226,14 +882,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2025-08-08"
       data-searchable="[canceled] planning commission — aug 08, 2025 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
@@ -1244,7 +898,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -1260,14 +913,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. This meeting was canceled. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2025-07-25"
       data-searchable="planning commission — jul 25, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -1278,7 +929,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -1294,14 +944,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2025-07-11"
       data-searchable="planning commission — jul 11, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -1312,7 +960,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -1328,14 +975,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2025-06-27"
       data-searchable="[canceled] planning commission — jun 27, 2025 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
@@ -1346,7 +991,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -1362,14 +1006,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. This meeting was canceled. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2025-06-13"
       data-searchable="[canceled] planning commission — jun 13, 2025 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
@@ -1380,7 +1022,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -1396,14 +1037,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. This meeting was canceled. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2025-05-30"
       data-searchable="planning commission — may 30, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -1414,7 +1053,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -1430,14 +1068,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2025-05-16"
       data-searchable="planning commission — may 16, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -1448,7 +1084,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -1464,14 +1099,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2025-05-02"
       data-searchable="planning commission — may 02, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -1482,7 +1115,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -1498,14 +1130,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2025-04-18"
       data-searchable="planning commission — apr 18, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -1516,7 +1146,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -1532,14 +1161,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2025-04-04"
       data-searchable="planning commission — apr 04, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -1550,7 +1177,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -1566,14 +1192,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2025-03-21"
       data-searchable="planning commission — mar 21, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -1584,7 +1208,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -1600,14 +1223,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2025-03-07"
       data-searchable="planning commission — mar 07, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -1618,7 +1239,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -1634,14 +1254,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2025-02-21"
       data-searchable="planning commission — feb 21, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -1652,7 +1270,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -1668,14 +1285,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2025-02-07"
       data-searchable="planning commission — feb 07, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -1686,7 +1301,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -1702,14 +1316,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2025-01-24"
       data-searchable="planning commission — jan 24, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -1720,7 +1332,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -1736,14 +1347,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2025-01-10"
       data-searchable="planning commission — jan 10, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -1754,7 +1363,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -1770,14 +1378,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2024-12-27"
       data-searchable="[canceled] planning commission — dec 27, 2024 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
@@ -1788,7 +1394,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -1804,14 +1409,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. This meeting was canceled. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2024-12-13"
       data-searchable="planning commission — dec 13, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -1822,7 +1425,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -1838,14 +1440,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2024-11-15"
       data-searchable="planning commission — nov 15, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -1856,7 +1456,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -1872,14 +1471,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2024-10-25"
       data-searchable="[canceled] planning commission — oct 25, 2024 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
@@ -1890,7 +1487,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -1906,14 +1502,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. This meeting was canceled. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2024-10-11"
       data-searchable="planning commission — oct 11, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -1924,7 +1518,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -1940,14 +1533,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2024-09-27"
       data-searchable="planning commission — sep 27, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -1958,7 +1549,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -1974,14 +1564,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2024-09-13"
       data-searchable="planning commission — sep 13, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -1992,7 +1580,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -2008,14 +1595,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2024-08-30"
       data-searchable="[canceled] planning commission — aug 30, 2024 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
@@ -2026,7 +1611,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -2042,14 +1626,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. This meeting was canceled. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2024-08-16"
       data-searchable="planning commission — aug 16, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -2060,7 +1642,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -2076,14 +1657,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2024-08-02"
       data-searchable="planning commission — aug 02, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -2094,7 +1673,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -2110,14 +1688,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2024-07-19"
       data-searchable="planning commission — jul 19, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -2128,7 +1704,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -2144,14 +1719,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2024-06-21"
       data-searchable="planning commission — jun 21, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -2162,7 +1735,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -2178,14 +1750,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2024-06-07"
       data-searchable="planning commission — jun 07, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -2196,7 +1766,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -2212,14 +1781,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2024-05-24"
       data-searchable="[canceled] planning commission — may 24, 2024 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
@@ -2230,7 +1797,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -2246,14 +1812,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. This meeting was canceled. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2024-05-10"
       data-searchable="planning commission — may 10, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -2264,7 +1828,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -2280,14 +1843,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2024-04-26"
       data-searchable="[canceled] planning commission — apr 26, 2024 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
@@ -2298,7 +1859,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -2314,14 +1874,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. This meeting was canceled. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2024-04-12"
       data-searchable="planning commission — apr 12, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -2332,7 +1890,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -2348,14 +1905,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2024-03-29"
       data-searchable="planning commission — mar 29, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -2366,7 +1921,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -2382,14 +1936,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2024-03-15"
       data-searchable="planning commission — mar 15, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -2400,7 +1952,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -2416,14 +1967,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2024-03-01"
       data-searchable="planning commission — mar 01, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -2434,7 +1983,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -2450,14 +1998,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2024-02-16"
       data-searchable="planning commission — feb 16, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -2468,7 +2014,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -2484,14 +2029,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2024-02-02"
       data-searchable="planning commission — feb 02, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -2502,7 +2045,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -2518,14 +2060,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2024-01-19"
       data-searchable="planning commission — jan 19, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -2536,7 +2076,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -2552,14 +2091,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2024-01-05"
       data-searchable="planning commission — jan 05, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -2570,7 +2107,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -2586,14 +2122,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2023-12-22"
       data-searchable="planning commission — dec 22, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -2604,7 +2138,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -2620,14 +2153,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2023-12-08"
       data-searchable="planning commission — dec 08, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -2638,7 +2169,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -2654,14 +2184,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2023-11-17"
       data-searchable="planning commission — nov 17, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -2672,7 +2200,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -2688,14 +2215,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2023-10-27"
       data-searchable="planning commission — oct 27, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -2706,7 +2231,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -2722,14 +2246,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2023-10-13"
       data-searchable="planning commission — oct 13, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -2740,7 +2262,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -2756,14 +2277,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2023-09-29"
       data-searchable="planning commission — sep 29, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -2774,7 +2293,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -2790,14 +2308,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2023-09-15"
       data-searchable="planning commission — sep 15, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -2808,7 +2324,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -2824,14 +2339,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2023-09-01"
       data-searchable="planning commission — sep 01, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -2842,7 +2355,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -2858,14 +2370,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2023-08-18"
       data-searchable="planning commission — aug 18, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -2876,7 +2386,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -2892,14 +2401,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2023-08-04"
       data-searchable="planning commission — aug 04, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -2910,7 +2417,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -2926,14 +2432,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2023-07-21"
       data-searchable="[canceled] planning commission — jul 21, 2023 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
@@ -2944,7 +2448,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -2960,14 +2463,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. This meeting was canceled. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2023-07-07"
       data-searchable="planning commission — jul 07, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -2978,7 +2479,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -2994,14 +2494,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2023-06-23"
       data-searchable="planning commission — jun 23, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -3012,7 +2510,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -3028,14 +2525,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2023-06-09"
       data-searchable="planning commission — jun 09, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -3046,7 +2541,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -3062,14 +2556,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2023-05-26"
       data-searchable="planning commission — may 26, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -3080,7 +2572,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -3096,14 +2587,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2023-05-12"
       data-searchable="planning commission — may 12, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -3114,7 +2603,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -3130,14 +2618,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2023-04-28"
       data-searchable="planning commission — apr 28, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -3148,7 +2634,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -3164,14 +2649,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2023-04-14"
       data-searchable="planning commission — apr 14, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -3182,7 +2665,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -3198,14 +2680,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2023-03-31"
       data-searchable="[canceled] planning commission — mar 31, 2023 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
@@ -3216,7 +2696,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -3232,14 +2711,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. This meeting was canceled. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2023-03-17"
       data-searchable="planning commission — mar 17, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -3250,7 +2727,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -3266,14 +2742,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2023-03-03"
       data-searchable="planning commission — mar 03, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -3284,7 +2758,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -3300,14 +2773,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2023-02-17"
       data-searchable="planning commission — feb 17, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -3318,7 +2789,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -3334,14 +2804,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2023-02-03"
       data-searchable="planning commission — feb 03, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -3352,7 +2820,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -3368,14 +2835,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2023-01-20"
       data-searchable="planning commission — jan 20, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -3386,7 +2851,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -3402,14 +2866,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2023-01-06"
       data-searchable="planning commission — jan 06, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -3420,7 +2882,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -3436,14 +2897,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2022-12-23"
       data-searchable="[canceled] planning commission — dec 23, 2022 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
@@ -3454,7 +2913,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -3470,14 +2928,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. This meeting was canceled. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2022-12-09"
       data-searchable="planning commission — dec 09, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -3488,7 +2944,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -3504,14 +2959,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2022-11-18"
       data-searchable="planning commission — nov 18, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -3522,7 +2975,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -3538,14 +2990,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2022-10-28"
       data-searchable="planning commission — oct 28, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -3556,7 +3006,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -3572,14 +3021,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2022-10-14"
       data-searchable="planning commission — oct 14, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -3590,7 +3037,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -3606,14 +3052,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2022-09-30"
       data-searchable="[canceled] planning commission — sep 30, 2022 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
@@ -3624,7 +3068,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -3640,14 +3083,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. This meeting was canceled. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2022-09-16"
       data-searchable="planning commission — sep 16, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -3658,7 +3099,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -3674,14 +3114,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2022-09-02"
       data-searchable="[canceled] planning commission — sep 02, 2022 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
@@ -3692,7 +3130,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -3708,14 +3145,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. This meeting was canceled. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2022-08-19"
       data-searchable="planning commission — aug 19, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -3726,7 +3161,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -3742,14 +3176,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2022-08-05"
       data-searchable="[canceled] planning commission — aug 05, 2022 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
@@ -3760,7 +3192,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -3776,14 +3207,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. This meeting was canceled. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2022-07-22"
       data-searchable="planning commission — jul 22, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -3794,7 +3223,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -3810,14 +3238,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2022-07-08"
       data-searchable="planning commission — jul 08, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -3828,7 +3254,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -3844,14 +3269,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2022-06-24"
       data-searchable="planning commission — jun 24, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -3862,7 +3285,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -3878,14 +3300,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2022-06-10"
       data-searchable="planning commission — jun 10, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -3896,7 +3316,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -3912,14 +3331,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2022-05-27"
       data-searchable="planning commission — may 27, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -3930,7 +3347,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -3946,14 +3362,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2022-05-13"
       data-searchable="planning commission — may 13, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -3964,7 +3378,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -3980,14 +3393,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2022-04-29"
       data-searchable="planning commission — apr 29, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -3998,7 +3409,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -4014,14 +3424,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2022-04-15"
       data-searchable="planning commission — apr 15, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -4032,7 +3440,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -4048,14 +3455,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2022-04-01"
       data-searchable="planning commission — apr 01, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -4066,7 +3471,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -4082,14 +3486,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2022-03-18"
       data-searchable="planning commission — mar 18, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -4100,7 +3502,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -4116,14 +3517,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2022-03-04"
       data-searchable="planning commission — mar 04, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
@@ -4134,7 +3533,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -4150,14 +3548,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission meeting. Agenda PDF available at the link.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2022-02-18"
       data-searchable="planning commission meeting saint paul planning commission upcoming meeting. agenda link available. "
     >
@@ -4168,7 +3564,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -4184,14 +3579,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission upcoming meeting. Agenda link available.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2022-02-04"
       data-searchable="planning commission meeting saint paul planning commission upcoming meeting. agenda link available. "
     >
@@ -4202,7 +3595,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -4218,14 +3610,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission upcoming meeting. Agenda link available.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2022-01-21"
       data-searchable="planning commission meeting saint paul planning commission upcoming meeting. agenda link available. "
     >
@@ -4236,7 +3626,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -4252,14 +3641,12 @@
       
       <div class="item-desc">Saint Paul Planning Commission upcoming meeting. Agenda link available.</div>
       
-      
     </div>
     
     <div
-      class="item-card "
+      class="item-card"
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
-      data-flagged="unflagged"
       data-date="2022-01-07"
       data-searchable="planning commission meeting saint paul planning commission upcoming meeting. agenda link available. "
     >
@@ -4270,7 +3657,6 @@
           
         </div>
         <div class="badges">
-          
           
           <span class="badge badge-hearing">Hearing</span>
           
@@ -4285,7 +3671,6 @@
       </div>
       
       <div class="item-desc">Saint Paul Planning Commission upcoming meeting. Agenda link available.</div>
-      
       
     </div>
     
@@ -4306,39 +3691,33 @@
 <script>
   // ── Client-side filtering ─────────────────────────────────────────────────
   function applyFilters() {
-    const search  = document.getElementById("search-input").value.toLowerCase();
-    const time    = document.getElementById("time-filter").value;   // "upcoming" | "past" | ""
-    const src     = document.getElementById("src-filter").value;
-    const cat     = document.getElementById("cat-filter").value.toLowerCase();
-    const flagged = document.getElementById("flag-filter").value;
-    const cards   = document.querySelectorAll("#item-list .item-card");
+    const search = document.getElementById("search-input").value.toLowerCase();
+    const time   = document.getElementById("time-filter").value;  // "upcoming" | "past" | ""
+    const src    = document.getElementById("src-filter").value;
+    const cat    = document.getElementById("cat-filter").value.toLowerCase();
+    const cards  = document.querySelectorAll("#item-list .item-card");
 
     let visible = 0;
     cards.forEach(card => {
-      const cardDate = card.dataset.date || "";
-
-      // Date comparison: YYYY-MM-DD strings sort lexicographically
+      const cardDate   = card.dataset.date || "";
       const isPast     = cardDate && cardDate < TODAY;
       const isUpcoming = cardDate && cardDate >= TODAY;
 
-      const matchTime    = !time
-                           || (time === "upcoming" && isUpcoming)
-                           || (time === "past"     && isPast);
-      const matchSearch  = !search  || card.dataset.searchable.includes(search);
-      const matchSrc     = !src     || card.dataset.source === src;
-      const matchCat     = !cat     || card.dataset.category === cat;
-      const matchFlagged = !flagged || card.dataset.flagged === flagged;
+      const matchTime   = !time   || (time === "upcoming" && isUpcoming) || (time === "past" && isPast);
+      const matchSearch = !search || card.dataset.searchable.includes(search);
+      const matchSrc    = !src    || card.dataset.source === src;
+      const matchCat    = !cat    || card.dataset.category === cat;
 
-      // Visually dim past items even when shown
+      // Visually dim past items when shown
       card.classList.toggle("is-past", !!isPast);
 
-      const show = matchTime && matchSearch && matchSrc && matchCat && matchFlagged;
+      const show = matchTime && matchSearch && matchSrc && matchCat;
       card.style.display = show ? "" : "none";
       if (show) visible++;
     });
 
-    const countEl = document.getElementById("result-count");
-    countEl.textContent = `Showing ${visible} of ${cards.length} items`;
+    document.getElementById("result-count").textContent =
+      `Showing ${visible} of ${cards.length} items`;
   }
 
   // Default: show upcoming only on page load
