@@ -1,12 +1,18 @@
 """
 pipeline/filter.py
 
-For the Granicus scraper, all items come from Saint Paul's own Planning
-Commission — they are already scoped to the right government body, so no
-geographic filtering is needed. All items pass through.
+Filtering strategy by source:
 
-This module is kept as a pass-through so the pipeline structure stays intact
-and additional sources with geo-filtering can be added later.
+  legistar  — Geographic filtering is applied inside the scraper itself,
+               on individual agenda items. Items arriving here are already
+               geo-relevant. Pass through.
+
+  granicus  — Planning Commission meeting-level items. Already scoped to
+               Saint Paul Planning Commission. Pass through.
+
+This module is kept as a named pipeline stage so the overall flow stays
+consistent and additional filtering can be added here without touching
+the scrapers.
 """
 
 import logging
@@ -15,5 +21,5 @@ logger = logging.getLogger(__name__)
 
 
 def apply(items: list[dict], config: dict) -> list[dict]:
-    logger.info("Filter: passing all %d items through (single trusted source)", len(items))
+    logger.info("Filter: %d items passed through", len(items))
     return items

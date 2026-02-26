@@ -1,31 +1,50 @@
 """
-Scraper: City of Saint Paul — Legistar Calendar
-Source: https://stpaul.legistar.com/Calendar.aspx
+Scraper: City of Saint Paul — Legistar Web API
+Source: https://webapi.legistar.com/v1/stpaul
 
-Legistar is Saint Paul's municipal meeting management system. The calendar
-page lists upcoming meetings for all city bodies: City Council, HRA, Library
-Board, committees, licensing hearings, etc.
+Uses the Legistar REST API to fetch individual agenda items from all city
+meetings (City Council, HRA, committees, boards, etc.), then applies a
+geographic filter to keep only items relevant to Summit-University and
+adjacent neighborhoods.
 
-The page renders a Telerik RadGrid table — standard HTML, no JavaScript
-rendering required for the initial load.
+This returns one dashboard item per relevant agenda item — not one per
+meeting — so the council sees specific actions like:
+  "2026 Saint Anthony/Rondo Arterial Mill and Overlay Project final order"
+rather than just a link to a full meeting agenda PDF.
 """
 
 import logging
 import re
-from datetime import datetime, timezone
-from urllib.parse import urljoin
+import time
+from datetime import datetime, timedelta, timezone
 
 import requests
-from bs4 import BeautifulSoup
 
 logger = logging.getLogger(__name__)
 
-BASE_URL = "https://stpaul.legistar.com/"
+API_BASE = "https://webapi.legistar.com/v1/stpaul"
+MATTER_DETAIL_URL = "https://stpaul.legistar.com/LegislationDetail.aspx?ID={matter_id}&GUID={matter_guid}&Options=&Search="
+MEETING_DETAIL_URL = "https://stpaul.legistar.com/MeetingDetail.aspx?LEGID={event_id}&GID=125&G=EDAB5C5F-1041-4DF4-A894-59E957785E36"
+
 HEADERS = {
     "User-Agent": (
         "Mozilla/5.0 (compatible; SUPC-NeighborhoodMonitor/1.0; "
         "+https://github.com/jcsouthworth/summit-university-monitor)"
     )
+}
+
+# Matter types that map to dashboard categories
+MATTER_TYPE_CATEGORY = {
+    "ordinance":        "hearing",
+    "resolution":       "hearing",
+    "resolution-ph":    "hearing",
+    "public hearing":   "hearing",
+    "resolution lh":    "hearing",
+    "administrative order": "hearing",
+    "contract":         "funding",
+    "grant":            "funding",
+    "road":             "road",
+    "right of way":     "road",
 }
 
 
@@ -34,153 +53,223 @@ def fetch(config: dict) -> list[dict]:
     if not cfg.get("enabled", True):
         return []
 
-    url = cfg["calendar_url"]
+    geo = _build_geo_patterns(config)
+    allowed_statuses = {s.lower() for s in cfg.get("agenda_statuses", ["Final", "Final-revised"])}
+
+    # Date range
+    today = datetime.now(timezone.utc).date()
+    date_from = today - timedelta(days=cfg.get("lookback_days", 30))
+    date_to   = today + timedelta(days=cfg.get("lookahead_days", 90))
+
+    # ── Step 1: Fetch events in the date range ────────────────────────────────
+    events = _fetch_events(cfg, date_from, date_to)
+    logger.info("Legistar: %d events in date range %s → %s", len(events), date_from, date_to)
+
+    # ── Step 2: For each event with a published agenda, fetch items ───────────
+    all_items: list[dict] = []
+    for event in events:
+        agenda_status = (event.get("EventAgendaStatusName") or "").lower()
+        if agenda_status not in allowed_statuses:
+            logger.debug("Skipping event %s (%s) — agenda status: %s",
+                         event.get("EventId"), event.get("EventBodyName"), agenda_status)
+            continue
+
+        event_id   = event["EventId"]
+        body_name  = event.get("EventBodyName", "Saint Paul Legistar")
+        event_date = _parse_event_date(event.get("EventDate", ""))
+        meeting_url = event.get("EventInSiteURL") or MEETING_DETAIL_URL.format(event_id=event_id)
+
+        items = _fetch_event_items(event_id)
+        if items is None:
+            # API error — skip this event but continue
+            continue
+
+        for raw_item in items:
+            item = _process_item(raw_item, body_name, event_date, meeting_url, geo, cfg)
+            if item:
+                all_items.append(item)
+
+        # Be polite to the API — small delay between per-event calls
+        time.sleep(0.25)
+
+    logger.info("Legistar: %d geo-relevant items across all events", len(all_items))
+    return all_items
+
+
+# ── API calls ─────────────────────────────────────────────────────────────────
+
+def _fetch_events(cfg: dict, date_from, date_to) -> list[dict]:
+    """Fetch all events in the given date range."""
+    url = f"{API_BASE}/events"
+    params = {
+        "$filter": (
+            f"EventDate ge datetime'{date_from.isoformat()}' and "
+            f"EventDate le datetime'{date_to.isoformat()}'"
+        ),
+        "$orderby": "EventDate asc",
+        "$top": 200,
+    }
+    try:
+        resp = requests.get(url, params=params, headers=HEADERS, timeout=30)
+        resp.raise_for_status()
+        return resp.json()
+    except requests.RequestException as e:
+        logger.error("Legistar events API error: %s", e)
+        return []
+    except ValueError as e:
+        logger.error("Legistar events API JSON parse error: %s", e)
+        return []
+
+
+def _fetch_event_items(event_id: int) -> list[dict] | None:
+    """Fetch individual agenda items for one event. Returns None on error."""
+    url = f"{API_BASE}/events/{event_id}/eventitems"
     try:
         resp = requests.get(url, headers=HEADERS, timeout=30)
         resp.raise_for_status()
+        return resp.json()
     except requests.RequestException as e:
-        logger.error("Legistar calendar error: %s", e)
-        return []
-
-    soup = BeautifulSoup(resp.text, "html.parser")
-
-    # The calendar data lives in a RadGrid table
-    table = soup.find("table", id=re.compile(r"gridCalendar", re.I))
-    if not table:
-        # Fallback: find any table that looks like a meeting calendar
-        for t in soup.find_all("table"):
-            headers = [th.get_text(strip=True).lower() for th in t.find_all("th")]
-            if any("date" in h or "meeting" in h or "name" in h for h in headers):
-                table = t
-                break
-
-    if not table:
-        logger.error("Legistar: could not find calendar table in page")
-        return []
-
-    # Parse column positions from header row
-    col_map = _parse_column_map(table)
-    logger.debug("Legistar column map: %s", col_map)
-
-    items = []
-    for row in table.find_all("tr"):
-        # Skip header rows
-        if row.find("th"):
-            continue
-        item = _parse_row(row, col_map, cfg)
-        if item:
-            items.append(item)
-
-    logger.info("Legistar: parsed %d items", len(items))
-    return items
-
-
-# ── Parsing helpers ───────────────────────────────────────────────────────────
-
-def _parse_column_map(table) -> dict[str, int]:
-    """Map column names to their index positions from the header row."""
-    col_map = {}
-    header_row = table.find("tr")
-    if not header_row:
-        return col_map
-    for i, th in enumerate(header_row.find_all(["th", "td"])):
-        text = th.get_text(strip=True).lower()
-        if "name" in text:
-            col_map.setdefault("name", i)
-        elif "date" in text:
-            col_map.setdefault("date", i)
-        elif "time" in text:
-            col_map.setdefault("time", i)
-        elif "location" in text:
-            col_map.setdefault("location", i)
-        elif "agenda" in text:
-            col_map.setdefault("agenda", i)
-        elif "minutes" in text:
-            col_map.setdefault("minutes", i)
-        elif "detail" in text:
-            col_map.setdefault("details", i)
-    return col_map
-
-
-def _parse_row(row, col_map: dict, cfg: dict) -> dict | None:
-    cells = row.find_all("td")
-    if not cells or len(cells) < 2:
+        logger.error("Legistar event items API error (event %s): %s", event_id, e)
+        return None
+    except ValueError as e:
+        logger.error("Legistar event items JSON parse error (event %s): %s", event_id, e)
         return None
 
-    def cell_text(key: str, fallback: int = -1) -> str:
-        idx = col_map.get(key, fallback)
-        if idx < 0 or idx >= len(cells):
-            return ""
-        return cells[idx].get_text(strip=True)
 
-    def cell_link(key: str, fallback: int = -1) -> str:
-        idx = col_map.get(key, fallback)
-        if idx < 0 or idx >= len(cells):
-            return ""
-        a = cells[idx].find("a", href=True)
-        if a:
-            href = a["href"]
-            return href if href.startswith("http") else urljoin(BASE_URL, href)
-        return ""
+# ── Item processing ───────────────────────────────────────────────────────────
 
-    name     = cell_text("name",     0)
-    date_raw = cell_text("date",     1)
-    time_raw = cell_text("time",     2)
-    location = cell_text("location", 3)
+def _process_item(
+    raw: dict,
+    body_name: str,
+    event_date: str,
+    meeting_url: str,
+    geo,
+    cfg: dict,
+) -> dict | None:
+    """
+    Convert a raw Legistar event item into a dashboard item dict,
+    or return None if the item should be skipped.
+    """
+    title        = (raw.get("EventItemTitle") or "").strip()
+    matter_name  = (raw.get("EventItemMatterName") or "").strip()
+    matter_file  = (raw.get("EventItemMatterFile") or "").strip()
+    matter_type  = (raw.get("EventItemMatterType") or "").strip()
+    matter_status = (raw.get("EventItemMatterStatus") or "").strip()
+    matter_id    = raw.get("EventItemMatterId")
+    matter_guid  = raw.get("EventItemMatterGuid") or ""
+    agenda_num   = raw.get("EventItemAgendaNumber")
 
-    if not name or not date_raw:
+    # Skip structural rows (roll call, section headers, adjournment)
+    if not title or not matter_id:
         return None
 
-    # Parse date
-    date_str = _parse_date(date_raw)
-    if not date_str:
-        logger.debug("Legistar: could not parse date '%s' for '%s'", date_raw, name)
+    # Skip generic filler items with no substantive content
+    skip_titles = {"roll call", "adjournment", "communications & receive/file",
+                   "approval of minutes", "public comment", "open forum"}
+    if title.lower() in skip_titles:
         return None
 
-    # Prefer agenda link; fall back to details link; fall back to calendar page
-    agenda_url = cell_link("agenda") or cell_link("details") or cfg["calendar_url"]
+    # ── Geographic filter ─────────────────────────────────────────────────────
+    searchable = f"{title} {matter_name}"
+    if not _geo_matches(searchable, geo):
+        return None
+
+    # ── Build dashboard item ──────────────────────────────────────────────────
+    # Prefer matter detail URL; fall back to meeting URL
+    if matter_id and matter_guid:
+        url = MATTER_DETAIL_URL.format(matter_id=matter_id, matter_guid=matter_guid)
+    else:
+        url = meeting_url
+
+    # Build a clean display title
+    display_title = matter_name or title
+    if matter_file:
+        display_title = f"{matter_file} — {display_title}"
 
     # Build description
-    desc_parts = [f"Meeting body: {name}"]
-    if time_raw:
-        desc_parts.append(f"Time: {time_raw}")
-    if location:
-        desc_parts.append(f"Location: {location}")
+    desc_parts = []
+    if body_name:
+        desc_parts.append(body_name)
+    if matter_type:
+        desc_parts.append(matter_type)
+    if matter_status:
+        desc_parts.append(matter_status)
+    if agenda_num:
+        desc_parts.append(f"Agenda item #{agenda_num}")
+    description = " · ".join(desc_parts)
 
-    title = f"{name} — {date_raw}"
-    if time_raw:
-        title += f" at {time_raw}"
+    category = _categorize(matter_type)
 
     return {
-        "title": title,
-        "description": " | ".join(desc_parts),
-        "date": date_str,
+        "title": display_title[:200],
+        "description": description,
+        "date": event_date,
         "source": cfg.get("label", "Saint Paul Legistar"),
         "source_key": "legistar",
-        "category": "hearing",
-        "address": location,
-        "url": agenda_url,
+        "category": category,
+        "address": _extract_address(searchable),
+        "url": url,
         "raw": {
-            "name": name,
-            "date": date_raw,
-            "time": time_raw,
-            "location": location,
+            "matter_file": matter_file,
+            "matter_type": matter_type,
+            "matter_status": matter_status,
+            "body": body_name,
+            "agenda_item": agenda_num,
         },
     }
 
 
-def _parse_date(raw: str) -> str | None:
-    """Parse Legistar date strings like '3/4/2026' or 'March 4, 2026'."""
-    raw = raw.strip()
-    formats = [
-        "%m/%d/%Y",       # 3/4/2026
-        "%B %d, %Y",      # March 4, 2026
-        "%b %d, %Y",      # Mar 4, 2026
-        "%Y-%m-%d",       # 2026-03-04
-    ]
-    for fmt in formats:
-        try:
-            return datetime.strptime(raw, fmt).strftime("%Y-%m-%d")
-        except ValueError:
-            continue
-    return None
+# ── Geographic matching ───────────────────────────────────────────────────────
+
+def _build_geo_patterns(config: dict) -> dict:
+    """Pre-compile regex patterns for geographic filtering."""
+    def make_pattern(terms):
+        if not terms:
+            return None
+        return re.compile(
+            r"\b(" + "|".join(re.escape(t) for t in terms) + r")\b",
+            re.IGNORECASE,
+        )
+
+    return {
+        "zip":          make_pattern(config.get("zip_codes", [])),
+        "neighborhood": make_pattern(config.get("neighborhoods", [])),
+        "corridor":     make_pattern(config.get("corridors", [])),
+    }
+
+
+def _geo_matches(text: str, geo: dict) -> bool:
+    """Return True if the text mentions a target ZIP, neighborhood, or corridor."""
+    for pattern in geo.values():
+        if pattern and pattern.search(text):
+            return True
+    return False
+
+
+# ── Helpers ───────────────────────────────────────────────────────────────────
+
+def _parse_event_date(raw: str) -> str:
+    """Parse Legistar ISO date string '2026-01-28T00:00:00' → '2026-01-28'."""
+    if not raw:
+        return datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    return raw[:10]
+
+
+def _categorize(matter_type: str) -> str:
+    """Map a Legistar matter type to a dashboard category."""
+    if not matter_type:
+        return "hearing"
+    mt = matter_type.lower()
+    for key, cat in MATTER_TYPE_CATEGORY.items():
+        if key in mt:
+            return cat
+    return "hearing"
+
+
+def _extract_address(text: str) -> str:
+    """Pull a street address out of item text if present."""
+    m = re.search(
+        r"\b\d{2,5}\s+[A-Za-z][A-Za-z\s]+(Ave|St|Blvd|Dr|Rd|Pkwy|Ln|Way|Ct)\b",
+        text, re.IGNORECASE,
+    )
+    return m.group(0) if m else ""

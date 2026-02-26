@@ -3,6 +3,57 @@
 # Summit-University Neighborhood Monitor — Configuration
 # ──────────────────────────────────────────────────────
 
+# ── Geographic scope ──────────────────────────────────
+# Used to filter Legistar agenda items to those relevant
+# to Summit-University and adjacent neighborhoods.
+
+neighborhoods:
+  - Summit-University
+  - Summit University
+  - Frogtown
+  - Thomas-Dale
+  - Hamline-Midway
+  - Macalester-Groveland
+  - Cathedral Hill
+  - Summit Hill
+  - Rondo             # Saint Anthony/Rondo corridor
+
+zip_codes:
+  - "55102"
+  - "55103"
+  - "55104"
+  - "55105"
+  - "55108"
+
+# Street names, avenues, and routes that run through or border the target area.
+# Agenda item titles that mention these will be kept.
+corridors:
+  - University Ave
+  - Saint Anthony Ave
+  - Saint Anthony
+  - Selby Ave
+  - Grand Ave
+  - Summit Ave
+  - Marshall Ave
+  - Dale St
+  - Snelling Ave
+  - Lexington Pkwy
+  - Rice St
+  - Western Ave
+  - Victoria St
+  - Fairview Ave
+  - Milton St
+  - Prior Ave
+  - Fuller Ave
+  - Ashland Ave
+  - Portland Ave
+  - Carroll Ave
+  - Thomas Ave
+  - Aurora Ave
+  - Iglehart Ave
+  - I-94
+  - Interstate 94
+
 # ── Auto-flagging keywords ────────────────────────────
 # Items matching ANY keyword in this list get flagged as "Needs Attention"
 flag_keywords:
@@ -39,6 +90,9 @@ flag_keywords:
   - lane reduction
   - road closure
   - detour
+  - mill and overlay
+  - resurfacing
+  - paving
   # Hearings / process
   - appeal
   - objection
@@ -46,6 +100,8 @@ flag_keywords:
   - public comment
   - contested
   - protest
+  - final order
+  - public hearing
 
 # ── Data sources ──────────────────────────────────────
 sources:
@@ -61,8 +117,19 @@ sources:
   legistar:
     enabled: true
     label: "Saint Paul Legistar"
-    # City of Saint Paul municipal calendar (City Council, committees, boards, etc.)
-    calendar_url: "https://stpaul.legistar.com/Calendar.aspx"
+    # Legistar Web API base URL
+    api_base: "https://webapi.legistar.com/v1/stpaul"
+    # How many days back to look for recent past meetings
+    lookback_days: 30
+    # How many days forward to look for upcoming meetings
+    lookahead_days: 90
+    # Only fetch items for events with these agenda statuses
+    # (events with no published agenda have no items to inspect)
+    agenda_statuses:
+      - "Final"
+      - "Final-revised"
+      - "Draft"
+      - "Published"
 
 # ── Dashboard display ─────────────────────────────────
 dashboard:
