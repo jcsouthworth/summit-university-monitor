@@ -235,11 +235,38 @@ def _build_geo_patterns(config: dict) -> dict:
 
 
 def _geo_matches(text: str, geo: dict) -> bool:
-    """Return True if the text mentions a target ZIP, neighborhood, or corridor."""
+    """Return True if the text mentions a target ZIP, neighborhood, or corridor.
+
+    Normalizes street suffixes before matching so that government documents
+    that spell out "Avenue", "Street", etc. match config entries like "Selby Ave".
+    """
+    normalized = _normalize_suffixes(text)
     for pattern in geo.values():
-        if pattern and pattern.search(text):
+        if pattern and pattern.search(normalized):
             return True
     return False
+
+
+# Suffix normalization map: full form → abbreviation used in config.yml corridors
+_SUFFIX_MAP = [
+    (re.compile(r"\bAvenue\b",   re.IGNORECASE), "Ave"),
+    (re.compile(r"\bStreet\b",   re.IGNORECASE), "St"),
+    (re.compile(r"\bBoulevard\b",re.IGNORECASE), "Blvd"),
+    (re.compile(r"\bParkway\b",  re.IGNORECASE), "Pkwy"),
+    (re.compile(r"\bDrive\b",    re.IGNORECASE), "Dr"),
+    (re.compile(r"\bLane\b",     re.IGNORECASE), "Ln"),
+    (re.compile(r"\bCourt\b",    re.IGNORECASE), "Ct"),
+    (re.compile(r"\bCircle\b",   re.IGNORECASE), "Cir"),
+    (re.compile(r"\bPlace\b",    re.IGNORECASE), "Pl"),
+    (re.compile(r"\bRoad\b",     re.IGNORECASE), "Rd"),
+]
+
+
+def _normalize_suffixes(text: str) -> str:
+    """Replace spelled-out street suffixes with standard abbreviations."""
+    for pattern, replacement in _SUFFIX_MAP:
+        text = pattern.sub(replacement, text)
+    return text
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
