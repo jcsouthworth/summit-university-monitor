@@ -63,23 +63,6 @@
     .stat-pill.alert { background: #fff3cd; border-color: #ffc107; color: #7a5c00; }
     .stat-pill.alert strong { color: #7a5c00; }
 
-    /* ── Flagged section ────────────────────────────── */
-    .flagged-section {
-      background: #fff8e6;
-      border: 1.5px solid #f0a500;
-      border-radius: 8px;
-      padding: 1rem 1.25rem;
-      margin-bottom: 1.5rem;
-    }
-    .flagged-section h2 {
-      font-size: 0.92rem;
-      font-weight: 700;
-      color: #7a5c00;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 0.75rem;
-    }
-
     /* ── Filter bar ─────────────────────────────────── */
     .filter-bar {
       display: flex;
@@ -135,7 +118,6 @@
       transition: box-shadow 0.1s;
     }
     .item-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-    .item-card.is-flagged { border-left: 4px solid #f0a500; }
     .item-card.is-past { opacity: 0.6; }
 
     .item-header {
@@ -169,7 +151,6 @@
     .badge-road     { background: #fff0e6; color: #8a4000; }
     .badge-funding  { background: #f3eeff; color: #5a1fa0; }
     .badge-source   { background: #f0f1f3; color: #444; font-weight: 500; }
-    .badge-flagged  { background: #ffc107; color: #5c3d00; }
     .badge-past     { background: #e8e8e8; color: #666; }
 
     .item-meta {
@@ -183,13 +164,6 @@
       margin-top: 0.4rem;
       line-height: 1.45;
     }
-    .item-flag-reasons {
-      font-size: 0.75rem;
-      color: #7a5c00;
-      margin-top: 0.3rem;
-      font-style: italic;
-    }
-
     /* ── Empty state ────────────────────────────────── */
     .empty-state {
       text-align: center;
@@ -237,47 +211,12 @@
 
   <!-- Stats bar -->
   <div class="stats" aria-label="Summary statistics">
-    <div class="stat-pill {% if stats.flagged > 0 %}alert{% endif %}">
-      &#9873; <strong>{{ stats.flagged }}</strong> flagged
-    </div>
     <div class="stat-pill"><strong>{{ stats.total }}</strong> total items</div>
     <div class="stat-pill"><strong>{{ stats.hearings }}</strong> hearings</div>
     <div class="stat-pill"><strong>{{ stats.permits }}</strong> permits</div>
     <div class="stat-pill"><strong>{{ stats.roads }}</strong> road/infra</div>
     <div class="stat-pill"><strong>{{ stats.funding }}</strong> funding</div>
   </div>
-
-  <!-- Flagged items section -->
-  {% set flagged_items = items | selectattr("flagged") | list %}
-  {% if flagged_items %}
-  <section class="flagged-section" aria-label="Flagged items needing attention">
-    <h2>&#9873; Needs Attention ({{ flagged_items | length }})</h2>
-    <div class="item-list">
-      {% for item in flagged_items %}
-      <div class="item-card is-flagged" data-date="{{ item.date }}">
-        <div class="item-header">
-          <div class="item-title">
-            {% if item.url %}<a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.title }}</a>
-            {% else %}{{ item.title }}{% endif %}
-          </div>
-          <div class="badges">
-            <span class="badge badge-flagged">&#9873; Flagged</span>
-            {% if item.category %}<span class="badge badge-{{ item.category }}">{{ item.category | title }}</span>{% endif %}
-            {% if item.source %}<span class="badge badge-source">{{ item.source }}</span>{% endif %}
-          </div>
-        </div>
-        <div class="item-meta">
-          {% if item.date %}{{ item.date }}{% endif %}
-          {% if item.address %} &nbsp;·&nbsp; {{ item.address }}{% endif %}
-        </div>
-        {% if item.flag_reasons %}
-        <div class="item-flag-reasons">Flagged for: {{ item.flag_reasons | join(", ") }}</div>
-        {% endif %}
-      </div>
-      {% endfor %}
-    </div>
-  </section>
-  {% endif %}
 
   <!-- Filter bar -->
   <div class="filter-bar" role="search" aria-label="Filter items">
@@ -317,14 +256,6 @@
         {% endfor %}
       </select>
     </div>
-    <div>
-      <label for="flag-filter">Flagged</label>
-      <select id="flag-filter" onchange="applyFilters()" aria-label="Filter flagged status">
-        <option value="">All</option>
-        <option value="flagged">Flagged only</option>
-        <option value="unflagged">Not flagged</option>
-      </select>
-    </div>
     <span class="result-count" id="result-count" aria-live="polite"></span>
   </div>
 
@@ -332,10 +263,9 @@
   <div class="item-list" id="item-list" aria-label="All government action items">
     {% for item in items %}
     <div
-      class="item-card {% if item.flagged %}is-flagged{% endif %}"
+      class="item-card"
       data-category="{{ item.category | lower }}"
       data-source="{{ item.source }}"
-      data-flagged="{{ 'flagged' if item.flagged else 'unflagged' }}"
       data-date="{{ item.date }}"
       data-searchable="{{ [item.title, item.description, item.address] | join(' ') | lower }}"
     >
@@ -348,9 +278,6 @@
           {% endif %}
         </div>
         <div class="badges">
-          {% if item.flagged %}
-          <span class="badge badge-flagged">&#9873; Flagged</span>
-          {% endif %}
           {% if item.category %}
           <span class="badge badge-{{ item.category }}">{{ item.category | title }}</span>
           {% endif %}
@@ -365,11 +292,6 @@
       </div>
       {% if item.description and item.description != item.title %}
       <div class="item-desc">{{ item.description[:300] }}{% if item.description | length > 300 %}…{% endif %}</div>
-      {% endif %}
-      {% if item.flag_reasons %}
-      <div class="item-flag-reasons">
-        Flagged for: {{ item.flag_reasons | join(", ") }}
-      </div>
       {% endif %}
     </div>
     {% endfor %}
@@ -394,39 +316,33 @@
 <script>
   // ── Client-side filtering ─────────────────────────────────────────────────
   function applyFilters() {
-    const search  = document.getElementById("search-input").value.toLowerCase();
-    const time    = document.getElementById("time-filter").value;   // "upcoming" | "past" | ""
-    const src     = document.getElementById("src-filter").value;
-    const cat     = document.getElementById("cat-filter").value.toLowerCase();
-    const flagged = document.getElementById("flag-filter").value;
-    const cards   = document.querySelectorAll("#item-list .item-card");
+    const search = document.getElementById("search-input").value.toLowerCase();
+    const time   = document.getElementById("time-filter").value;  // "upcoming" | "past" | ""
+    const src    = document.getElementById("src-filter").value;
+    const cat    = document.getElementById("cat-filter").value.toLowerCase();
+    const cards  = document.querySelectorAll("#item-list .item-card");
 
     let visible = 0;
     cards.forEach(card => {
-      const cardDate = card.dataset.date || "";
-
-      // Date comparison: YYYY-MM-DD strings sort lexicographically
+      const cardDate   = card.dataset.date || "";
       const isPast     = cardDate && cardDate < TODAY;
       const isUpcoming = cardDate && cardDate >= TODAY;
 
-      const matchTime    = !time
-                           || (time === "upcoming" && isUpcoming)
-                           || (time === "past"     && isPast);
-      const matchSearch  = !search  || card.dataset.searchable.includes(search);
-      const matchSrc     = !src     || card.dataset.source === src;
-      const matchCat     = !cat     || card.dataset.category === cat;
-      const matchFlagged = !flagged || card.dataset.flagged === flagged;
+      const matchTime   = !time   || (time === "upcoming" && isUpcoming) || (time === "past" && isPast);
+      const matchSearch = !search || card.dataset.searchable.includes(search);
+      const matchSrc    = !src    || card.dataset.source === src;
+      const matchCat    = !cat    || card.dataset.category === cat;
 
-      // Visually dim past items even when shown
+      // Visually dim past items when shown
       card.classList.toggle("is-past", !!isPast);
 
-      const show = matchTime && matchSearch && matchSrc && matchCat && matchFlagged;
+      const show = matchTime && matchSearch && matchSrc && matchCat;
       card.style.display = show ? "" : "none";
       if (show) visible++;
     });
 
-    const countEl = document.getElementById("result-count");
-    countEl.textContent = `Showing ${visible} of ${cards.length} items`;
+    document.getElementById("result-count").textContent =
+      `Showing ${visible} of ${cards.length} items`;
   }
 
   // Default: show upcoming only on page load

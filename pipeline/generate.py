@@ -55,7 +55,6 @@ def build(items: list[dict], config: dict) -> Path:
     # Stats
     stats = {
         "total": len(ordered_items),
-        "flagged": len(flagged),
         "permits": sum(1 for i in ordered_items if i.get("category") == "permit"),
         "hearings": sum(1 for i in ordered_items if i.get("category") == "hearing"),
         "roads": sum(1 for i in ordered_items if i.get("category") == "road"),

@@ -23,7 +23,6 @@ import requests
 logger = logging.getLogger(__name__)
 
 API_BASE = "https://webapi.legistar.com/v1/stpaul"
-MATTER_DETAIL_URL = "https://stpaul.legistar.com/LegislationDetail.aspx?ID={matter_id}&GUID={matter_guid}&Options=&Search="
 MEETING_DETAIL_URL = "https://stpaul.legistar.com/MeetingDetail.aspx?LEGID={event_id}&GID=125&G=EDAB5C5F-1041-4DF4-A894-59E957785E36"
 
 HEADERS = {
@@ -155,12 +154,10 @@ def _process_item(
     matter_file  = (raw.get("EventItemMatterFile") or "").strip()
     matter_type  = (raw.get("EventItemMatterType") or "").strip()
     matter_status = (raw.get("EventItemMatterStatus") or "").strip()
-    matter_id    = raw.get("EventItemMatterId")
-    matter_guid  = raw.get("EventItemMatterGuid") or ""
     agenda_num   = raw.get("EventItemAgendaNumber")
 
     # Skip structural rows (roll call, section headers, adjournment)
-    if not title or not matter_id:
+    if not title or not matter_type:
         return None
 
     # Skip generic filler items with no substantive content
@@ -175,11 +172,10 @@ def _process_item(
         return None
 
     # ── Build dashboard item ──────────────────────────────────────────────────
-    # Prefer matter detail URL; fall back to meeting URL
-    if matter_id and matter_guid:
-        url = MATTER_DETAIL_URL.format(matter_id=matter_id, matter_guid=matter_guid)
-    else:
-        url = meeting_url
+    # Always link to the meeting page — LegislationDetail URLs use an internal
+    # ID scheme that doesn't match the API's EventItemMatterId, so the meeting
+    # page is the only reliable link. The full agenda is visible there.
+    url = meeting_url
 
     # Build a clean display title
     display_title = matter_name or title
