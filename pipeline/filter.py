@@ -4,11 +4,20 @@ pipeline/filter.py
 Geographic filter — keeps only items that are plausibly within or adjacent
 to the target neighborhoods.
 
-An item passes if ANY of the following match (case-insensitive):
-  1. Its address contains one of the target ZIP codes
-  2. Its title or description mentions a neighborhood name
-  3. Its title or description mentions a target corridor / street name
-  4. Its address matches a corridor street name
+Filtering strategy by source:
+  - stpaul_permits:  trusted (ZIP-filtered at the Socrata API query level)
+  - stpaul_planning: trusted (Saint Paul Planning Commission covers our city;
+                     agenda links carry no per-item address to filter on)
+  - ramsey_county:   trusted (county board and road pages are already scoped
+                     to Ramsey County, which contains our neighborhoods)
+  - mndot:           geo-filtered — MnDOT covers the whole state, so we check
+                     for ZIP, neighborhood, corridor, or "Saint Paul" mentions
+
+An item from mndot passes if ANY of the following match (case-insensitive):
+  1. Its text contains one of the target ZIP codes
+  2. Its text mentions a neighborhood name
+  3. Its text mentions a target corridor / street name
+  4. Its text mentions "Saint Paul" or "Ramsey"
 """
 
 import re
@@ -79,11 +88,31 @@ def _matches(
     if corridor_pattern and corridor_pattern.search(searchable):
         return True
 
-    # 4. Permit/planning items from Saint Paul sources are pre-filtered by ZIP
-    #    in the Socrata query, so pass them through if geo data is sparse
+    # 4. Source-level trust rules
     source_key = item.get("source_key", "")
+
+    # Permit API: ZIP-filtered at query level — always relevant
     if source_key == "stpaul_permits":
-        # Already ZIP-filtered at API level — trust it
         return True
 
+    # Planning Commission and BZA: scoped to Saint Paul government —
+    # agenda links carry no per-item address, so trust all items
+    if source_key == "stpaul_planning":
+        return True
+
+    # Ramsey County: board agendas and road projects are county-scoped,
+    # which fully contains our target neighborhoods — trust all items
+    if source_key == "ramsey_county":
+        return True
+
+    # MnDOT / Metro Transit: statewide source — apply a broader Saint Paul
+    # check in addition to the neighborhood/corridor patterns above
+    if source_key == "mndot":
+        saint_paul_pattern = re.compile(r"\bsaint paul\b|\bramsey\b", re.IGNORECASE)
+        if saint_paul_pattern.search(searchable):
+            return True
+        # If none of the geo signals matched, drop it
+        return False
+
+    # Unknown source — apply full geo filter (already checked above)
     return False
