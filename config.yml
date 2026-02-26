@@ -3,43 +3,6 @@
 # Summit-University Neighborhood Monitor — Configuration
 # ──────────────────────────────────────────────────────
 
-# ── Geographic scope ──────────────────────────────────
-neighborhoods:
-  - Summit-University
-  - Summit University
-  - Frogtown
-  - Thomas-Dale
-  - Hamline-Midway
-  - Macalester-Groveland
-  - Cathedral Hill
-  - Summit Hill
-
-zip_codes:
-  - "55102"
-  - "55103"
-  - "55104"
-  - "55105"
-  - "55108"
-
-# Major corridors / street names used as geo signals in text-based scrapers
-corridors:
-  - University Ave
-  - Selby Ave
-  - Grand Ave
-  - Summit Ave
-  - Marshall Ave
-  - Dale St
-  - Snelling Ave
-  - Lexington Pkwy
-  - Rice St
-  - Western Ave
-  - Victoria St
-  - Fairview Ave
-  - Milton St
-  - Prior Ave
-  - I-94
-  - Interstate 94
-
 # ── Auto-flagging keywords ────────────────────────────
 # Items matching ANY keyword in this list get flagged as "Needs Attention"
 flag_keywords:
@@ -87,60 +50,16 @@ flag_keywords:
 # ── Data sources ──────────────────────────────────────
 sources:
 
-  stpaul_permits:
+  granicus:
     enabled: true
-    label: "Saint Paul DSI"
-    # Socrata dataset ID for building permits on data.stpaul.gov
-    # To verify: visit https://data.stpaul.gov and search "building permits"
-    # Click the dataset, then API → copy the dataset identifier (e.g. "j2gg-jksy")
-    dataset_id: "j2gg-jksy"
-    base_url: "https://data.stpaul.gov/resource"
-    # Max records to fetch per run
-    limit: 500
-    # Socrata field name that holds the ZIP code (verify against dataset columns)
-    zip_field: "zip"
-    # Socrata field name for the permit issue date
-    date_field: "date_issued"
-    # Socrata field for street address
-    address_field: "address"
-    # Socrata field for permit type description
-    type_field: "work_description"
-    # Permit types that indicate a high-priority item (case-insensitive substring match)
-    priority_types:
-      - demolish
-      - demolition
-      - variance
-      - conditional use
-
-  stpaul_planning:
-    enabled: true
-    label: "Saint Paul Planning"
-    # Planning Commission meetings and agenda page
-    meetings_url: "https://www.stpaul.gov/departments/planning-economic-development/planning/planning-commission-meetings"
-    # Board of Zoning Appeals
-    bza_url: "https://www.stpaul.gov/departments/safety-inspections/boards-commissions/board-zoning-appeals"
-
-  ramsey_county:
-    enabled: true
-    label: "Ramsey County"
-    # County board agendas and minutes
-    board_url: "https://www.ramseycounty.us/your-government/county-board/board-meetings-agendas-minutes"
-    # Public Works / road projects
-    roads_url: "https://www.ramseycounty.us/residents/roads-transit/road-projects"
-
-  mndot:
-    enabled: true
-    label: "MnDOT / Metro"
-    # Metro District active projects
-    projects_url: "https://www.dot.state.mn.us/metro/projects/"
-    # Metro Transit capital projects (Green Line extension, etc.)
-    metro_transit_url: "https://www.metrotransit.org/capital-projects"
+    label: "Saint Paul Planning Commission"
+    # Main listing page
+    listing_url: "https://stpaul.granicus.com/ViewPublisher.php?view_id=56"
+    # RSS feed — agenda-published meetings (most reliable source)
+    rss_url: "https://stpaul.granicus.com/ViewPublisherRSS.php?view_id=56&mode=agendas"
 
 # ── Dashboard display ─────────────────────────────────
 dashboard:
   title: "Summit-University Neighborhood Monitor"
   subtitle: "Summit University Planning Council · Saint Paul, MN"
-  # Number of days back to show items (items older than this are dropped)
-  max_age_days: 90
-  # Link shown in dashboard footer
   council_url: "https://www.summituniversityplanningcouncil.org"
