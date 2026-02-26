@@ -79,7 +79,6 @@
       letter-spacing: 0.05em;
       margin-bottom: 0.75rem;
     }
-    .flagged-section .flag-icon { margin-right: 0.3rem; }
 
     /* ── Filter bar ─────────────────────────────────── */
     .filter-bar {
@@ -113,6 +112,12 @@
       color: #1a1a1a;
       width: 200px;
     }
+    /* Highlight the time selector to make it prominent */
+    #time-filter {
+      border-color: #1a56a0;
+      font-weight: 600;
+      color: #1a3a6b;
+    }
     .result-count {
       margin-left: auto;
       font-size: 0.8rem;
@@ -130,9 +135,8 @@
       transition: box-shadow 0.1s;
     }
     .item-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-    .item-card.is-flagged {
-      border-left: 4px solid #f0a500;
-    }
+    .item-card.is-flagged { border-left: 4px solid #f0a500; }
+    .item-card.is-past { opacity: 0.6; }
 
     .item-header {
       display: flex;
@@ -166,6 +170,7 @@
     .badge-funding  { background: #f3eeff; color: #5a1fa0; }
     .badge-source   { background: #f0f1f3; color: #444; font-weight: 500; }
     .badge-flagged  { background: #ffc107; color: #5c3d00; }
+    .badge-past     { background: #e8e8e8; color: #666; }
 
     .item-meta {
       font-size: 0.78rem;
@@ -219,28 +224,59 @@
   <h1>Summit-University Neighborhood Monitor</h1>
   <div class="subtitle">Summit University Planning Council · Saint Paul, MN</div>
   <div class="meta">
-    Last updated: <time datetime="2026-02-26T01:41:23Z">February 26, 2026 at 01:41 AM UTC</time>
+    Last updated: <time datetime="2026-02-26T01:58:57Z">February 26, 2026 at 01:58 AM UTC</time>
     &nbsp;·&nbsp;
     <a href="https://www.summituniversityplanningcouncil.org" target="_blank" rel="noopener">Summit University Planning Council</a>
   </div>
 </header>
 
+<!-- Embed today's date for JS date comparison -->
+<script>const TODAY = "2026-02-26";</script>
+
 <main>
 
   <!-- Stats bar -->
   <div class="stats" aria-label="Summary statistics">
-    <div class="stat-pill ">
-      &#9873; <strong>0</strong> flagged
+    <div class="stat-pill alert">
+      &#9873; <strong>1</strong> flagged
     </div>
-    <div class="stat-pill"><strong>104</strong> total items</div>
+    <div class="stat-pill"><strong>147</strong> total items</div>
+    <div class="stat-pill"><strong>147</strong> hearings</div>
     <div class="stat-pill"><strong>0</strong> permits</div>
-    <div class="stat-pill"><strong>104</strong> hearings</div>
     <div class="stat-pill"><strong>0</strong> road/infra</div>
     <div class="stat-pill"><strong>0</strong> funding</div>
   </div>
 
   <!-- Flagged items section -->
   
+  
+  <section class="flagged-section" aria-label="Flagged items needing attention">
+    <h2>&#9873; Needs Attention (1)</h2>
+    <div class="item-list">
+      
+      <div class="item-card is-flagged" data-date="2026-01-08">
+        <div class="item-header">
+          <div class="item-title">
+            <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1373126&amp;GUID=6158DA34-0025-4A28-9502-C8F80E8B6AF2" target="_blank" rel="noopener">Rent Stabilization Appeal Hearings — 1/8/2026 at 10:00 AM</a>
+            
+          </div>
+          <div class="badges">
+            <span class="badge badge-flagged">&#9873; Flagged</span>
+            <span class="badge badge-hearing">Hearing</span>
+            <span class="badge badge-source">Saint Paul Legistar</span>
+          </div>
+        </div>
+        <div class="item-meta">
+          2026-01-08
+           &nbsp;·&nbsp; Room 330 City Hall &amp; Court House/Remote
+        </div>
+        
+        <div class="item-flag-reasons">Flagged for: appeal</div>
+        
+      </div>
+      
+    </div>
+  </section>
   
 
   <!-- Filter bar -->
@@ -250,10 +286,29 @@
       <input
         type="text"
         id="search-input"
-        placeholder="address, keyword..."
+        placeholder="keyword, body name..."
         oninput="applyFilters()"
         aria-label="Search items"
       />
+    </div>
+    <div>
+      <label for="time-filter">Time</label>
+      <select id="time-filter" onchange="applyFilters()" aria-label="Filter by time">
+        <option value="upcoming">Upcoming only</option>
+        <option value="past">Past only</option>
+        <option value="">All meetings</option>
+      </select>
+    </div>
+    <div>
+      <label for="src-filter">Source</label>
+      <select id="src-filter" onchange="applyFilters()" aria-label="Filter by source">
+        <option value="">All sources</option>
+        
+        <option value="Saint Paul Legistar">Saint Paul Legistar</option>
+        
+        <option value="Saint Paul Planning Commission">Saint Paul Planning Commission</option>
+        
+      </select>
     </div>
     <div>
       <label for="cat-filter">Category</label>
@@ -265,18 +320,9 @@
       </select>
     </div>
     <div>
-      <label for="src-filter">Source</label>
-      <select id="src-filter" onchange="applyFilters()" aria-label="Filter by source">
-        <option value="">All sources</option>
-        
-        <option value="Saint Paul Planning Commission">Saint Paul Planning Commission</option>
-        
-      </select>
-    </div>
-    <div>
-      <label for="flag-filter">Show</label>
+      <label for="flag-filter">Flagged</label>
       <select id="flag-filter" onchange="applyFilters()" aria-label="Filter flagged status">
-        <option value="">All items</option>
+        <option value="">All</option>
         <option value="flagged">Flagged only</option>
         <option value="unflagged">Not flagged</option>
       </select>
@@ -288,10 +334,323 @@
   <div class="item-list" id="item-list" aria-label="All government action items">
     
     <div
+      class="item-card is-flagged"
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="flagged"
+      data-date="2026-01-08"
+      data-searchable="rent stabilization appeal hearings — 1/8/2026 at 10:00 am meeting body: rent stabilization appeal hearings | time: 10:00 am | location: room 330 city hall &amp; court house/remote room 330 city hall &amp; court house/remote"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1373126&amp;GUID=6158DA34-0025-4A28-9502-C8F80E8B6AF2" target="_blank" rel="noopener">Rent Stabilization Appeal Hearings — 1/8/2026 at 10:00 AM</a>
+          
+        </div>
+        <div class="badges">
+          
+          <span class="badge badge-flagged">&#9873; Flagged</span>
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-01-08
+         &nbsp;·&nbsp; Room 330 City Hall &amp; Court House/Remote
+      </div>
+      
+      <div class="item-desc">Meeting body: Rent Stabilization Appeal Hearings | Time: 10:00 AM | Location: Room 330 City Hall &amp; Court House/Remote</div>
+      
+      
+      <div class="item-flag-reasons">
+        Flagged for: appeal
+      </div>
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-03-05"
+      data-searchable="licensing hearing — 3/5/2026 at 2:00 pm meeting body: licensing hearing | time: 2:00 pm | location: legislative hearing room  330, city hall legislative hearing room  330, city hall"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1397680&amp;GUID=63EAEB11-C36B-41BE-ADC0-CB4EC278470C" target="_blank" rel="noopener">Licensing Hearing — 3/5/2026 at 2:00 PM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-03-05
+         &nbsp;·&nbsp; Legislative Hearing Room  330, City Hall
+      </div>
+      
+      <div class="item-desc">Meeting body: Licensing Hearing | Time: 2:00 PM | Location: Legislative Hearing Room  330, City Hall</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-03-04"
+      data-searchable="city council — 3/4/2026 at 3:30 pm meeting body: city council | time: 3:30 pm | location: council chambers - 3rd floor council chambers - 3rd floor"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/Calendar.aspx" target="_blank" rel="noopener">City Council — 3/4/2026 at 3:30 PM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-03-04
+         &nbsp;·&nbsp; Council Chambers - 3rd Floor
+      </div>
+      
+      <div class="item-desc">Meeting body: City Council | Time: 3:30 PM | Location: Council Chambers - 3rd Floor</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-03-04"
+      data-searchable="city council — 3/4/2026 at 11:45 am meeting body: city council | time: 11:45 am | location: room 330 - 3rd floorclosed door meeting of the city council pursuant to minnesota statutes section 13d.05, subdivision 3(b) to discuss pending litigation in washington v. city of saint paul. room 330 - 3rd floorclosed door meeting of the city council pursuant to minnesota statutes section 13d.05, subdivision 3(b) to discuss pending litigation in washington v. city of saint paul."
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1397692&amp;GUID=9EE43A3A-C8AF-4607-BA8F-FFA20F96E610" target="_blank" rel="noopener">City Council — 3/4/2026 at 11:45 AM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-03-04
+         &nbsp;·&nbsp; Room 330 - 3rd FloorClosed door meeting of the City Council pursuant to Minnesota Statutes Section 13D.05, subdivision 3(b) to discuss pending litigation in Washington v. City of Saint Paul.
+      </div>
+      
+      <div class="item-desc">Meeting body: City Council | Time: 11:45 AM | Location: Room 330 - 3rd FloorClosed door meeting of the City Council pursuant to Minnesota Statutes Section 13D.05, subdivision 3(b) to discuss pending litigation in Washington v. City of Saint Paul.</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-03-04"
+      data-searchable="city council — 3/4/2026 at 11:15 am meeting body: city council | time: 11:15 am | location: room 330 - 3rd floorclosed door meeting of the city council pursuant to minnesota statutes section 13d.05, subdivision 3(b) to discuss pending litigation in davison v. city of saint paul. room 330 - 3rd floorclosed door meeting of the city council pursuant to minnesota statutes section 13d.05, subdivision 3(b) to discuss pending litigation in davison v. city of saint paul."
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1397691&amp;GUID=D7D3F679-70B2-4B28-9C07-7C341E02BA56" target="_blank" rel="noopener">City Council — 3/4/2026 at 11:15 AM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-03-04
+         &nbsp;·&nbsp; Room 330 - 3rd FloorClosed door meeting of the City Council pursuant to Minnesota Statutes Section 13D.05, subdivision 3(b) to discuss pending litigation in Davison v. City of Saint Paul.
+      </div>
+      
+      <div class="item-desc">Meeting body: City Council | Time: 11:15 AM | Location: Room 330 - 3rd FloorClosed door meeting of the City Council pursuant to Minnesota Statutes Section 13D.05, subdivision 3(b) to discuss pending litigation in Davison v. City of Saint Paul.</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-02-25"
+      data-searchable="city council — 2/25/2026 at 3:30 pm meeting body: city council | time: 3:30 pm | location: council chambers - 3rd floor council chambers - 3rd floor"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1396856&amp;GUID=779C62B8-35F8-48F9-AC62-37094C21D7A9" target="_blank" rel="noopener">City Council — 2/25/2026 at 3:30 PM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-02-25
+         &nbsp;·&nbsp; Council Chambers - 3rd Floor
+      </div>
+      
+      <div class="item-desc">Meeting body: City Council | Time: 3:30 PM | Location: Council Chambers - 3rd Floor</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-02-25"
+      data-searchable="housing &amp; redevelopment authority — 2/25/2026 at 2:00 pm meeting body: housing &amp; redevelopment authority | time: 2:00 pm | location: council chambers, city hall council chambers, city hall"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1396948&amp;GUID=5E86B82C-9092-44CE-8FD9-0978EF7937D2" target="_blank" rel="noopener">Housing &amp; Redevelopment Authority — 2/25/2026 at 2:00 PM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-02-25
+         &nbsp;·&nbsp; Council Chambers, City Hall
+      </div>
+      
+      <div class="item-desc">Meeting body: Housing &amp; Redevelopment Authority | Time: 2:00 PM | Location: Council Chambers, City Hall</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-02-25"
+      data-searchable="public safety committee — 2/25/2026 at 10:00 am meeting body: public safety committee | time: 10:00 am | location: council chambers, city hall council chambers, city hall"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1396937&amp;GUID=D08EAA8B-5C47-44ED-A2D0-9D416F577277" target="_blank" rel="noopener">Public Safety Committee — 2/25/2026 at 10:00 AM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-02-25
+         &nbsp;·&nbsp; Council Chambers, City Hall
+      </div>
+      
+      <div class="item-desc">Meeting body: Public Safety Committee | Time: 10:00 AM | Location: Council Chambers, City Hall</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-02-24"
+      data-searchable="legislative hearings — 2/24/2026 at 9:00 am meeting body: legislative hearings | time: 9:00 am | location: room 330 city hall &amp; court house/remote room 330 city hall &amp; court house/remote"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1396883&amp;GUID=E42FD372-57DA-4E6A-9983-81860502C56A" target="_blank" rel="noopener">Legislative Hearings — 2/24/2026 at 9:00 AM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-02-24
+         &nbsp;·&nbsp; Room 330 City Hall &amp; Court House/Remote
+      </div>
+      
+      <div class="item-desc">Meeting body: Legislative Hearings | Time: 9:00 AM | Location: Room 330 City Hall &amp; Court House/Remote</div>
+      
+      
+    </div>
+    
+    <div
       class="item-card "
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2026-02-20"
       data-searchable="planning commission — feb 20, 2026 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -323,8 +682,349 @@
     <div
       class="item-card "
       data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-02-18"
+      data-searchable="city council — 2/18/2026 at 3:30 pm meeting body: city council | time: 3:30 pm | location: council chambers - 3rd floor council chambers - 3rd floor"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1390704&amp;GUID=60DBA421-88A0-4518-A5EB-551423C499D9" target="_blank" rel="noopener">City Council — 2/18/2026 at 3:30 PM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-02-18
+         &nbsp;·&nbsp; Council Chambers - 3rd Floor
+      </div>
+      
+      <div class="item-desc">Meeting body: City Council | Time: 3:30 PM | Location: Council Chambers - 3rd Floor</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-02-18"
+      data-searchable="housing &amp; redevelopment authority — 2/18/2026 at 2:00 pm meeting body: housing &amp; redevelopment authority | time: 2:00 pm | location: council chambers, city hallthe hra board meeting has been cancelled council chambers, city hallthe hra board meeting has been cancelled"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/MeetingDetail.aspx?ID=1389919&amp;GUID=F8B29D06-8712-4BE6-A89A-D01ADBA1A8E0&amp;Options=info|&amp;Search=" target="_blank" rel="noopener">Housing &amp; Redevelopment Authority — 2/18/2026 at 2:00 PM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-02-18
+         &nbsp;·&nbsp; Council Chambers, City HallThe HRA Board Meeting has been Cancelled
+      </div>
+      
+      <div class="item-desc">Meeting body: Housing &amp; Redevelopment Authority | Time: 2:00 PM | Location: Council Chambers, City HallThe HRA Board Meeting has been Cancelled</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-02-18"
+      data-searchable="policy committee — 2/18/2026 at 10:00 am meeting body: policy committee | time: 10:00 am | location: council chambers, city hall council chambers, city hall"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/MeetingDetail.aspx?ID=1390740&amp;GUID=27222629-216A-4315-8D9F-08A0AE452CDB&amp;Options=info|&amp;Search=" target="_blank" rel="noopener">Policy Committee — 2/18/2026 at 10:00 AM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-02-18
+         &nbsp;·&nbsp; Council Chambers, City Hall
+      </div>
+      
+      <div class="item-desc">Meeting body: Policy Committee | Time: 10:00 AM | Location: Council Chambers, City Hall</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-02-17"
+      data-searchable="audit committee — 2/17/2026 at 4:00 pm meeting body: audit committee | time: 4:00 pm | location: city hall, 3rd floor city hall, 3rd floor"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1389876&amp;GUID=991B6FE4-A251-4048-9FD0-4F7EF3F849BF" target="_blank" rel="noopener">Audit Committee — 2/17/2026 at 4:00 PM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-02-17
+         &nbsp;·&nbsp; City Hall, 3rd Floor
+      </div>
+      
+      <div class="item-desc">Meeting body: Audit Committee | Time: 4:00 PM | Location: City Hall, 3rd Floor</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-02-17"
+      data-searchable="legislative hearings — 2/17/2026 at 9:00 am meeting body: legislative hearings | time: 9:00 am | location: room 330 city hall &amp; court house/remote room 330 city hall &amp; court house/remote"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1390733&amp;GUID=AC41488B-2280-49E0-816B-29858505ED16" target="_blank" rel="noopener">Legislative Hearings — 2/17/2026 at 9:00 AM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-02-17
+         &nbsp;·&nbsp; Room 330 City Hall &amp; Court House/Remote
+      </div>
+      
+      <div class="item-desc">Meeting body: Legislative Hearings | Time: 9:00 AM | Location: Room 330 City Hall &amp; Court House/Remote</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-02-11"
+      data-searchable="city council — 2/11/2026 at 3:30 pm meeting body: city council | time: 3:30 pm | location: council chambers - 3rd floor council chambers - 3rd floor"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1387392&amp;GUID=6A9D5DD5-5D59-4F84-9516-F97D5F6FCE7D" target="_blank" rel="noopener">City Council — 2/11/2026 at 3:30 PM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-02-11
+         &nbsp;·&nbsp; Council Chambers - 3rd Floor
+      </div>
+      
+      <div class="item-desc">Meeting body: City Council | Time: 3:30 PM | Location: Council Chambers - 3rd Floor</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-02-11"
+      data-searchable="housing &amp; redevelopment authority — 2/11/2026 at 2:00 pm meeting body: housing &amp; redevelopment authority | time: 2:00 pm | location: council chambers, city hall council chambers, city hall"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1387298&amp;GUID=124427F3-9767-43FE-BCFA-111B3D866931" target="_blank" rel="noopener">Housing &amp; Redevelopment Authority — 2/11/2026 at 2:00 PM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-02-11
+         &nbsp;·&nbsp; Council Chambers, City Hall
+      </div>
+      
+      <div class="item-desc">Meeting body: Housing &amp; Redevelopment Authority | Time: 2:00 PM | Location: Council Chambers, City Hall</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-02-11"
+      data-searchable="organizational committee — 2/11/2026 at 10:00 am meeting body: organizational committee | time: 10:00 am | location: council chambers council chambers"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1387165&amp;GUID=1FFBC3F5-7A2C-4EC9-9F96-06449F26D2FE" target="_blank" rel="noopener">Organizational Committee — 2/11/2026 at 10:00 AM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-02-11
+         &nbsp;·&nbsp; Council Chambers
+      </div>
+      
+      <div class="item-desc">Meeting body: Organizational Committee | Time: 10:00 AM | Location: Council Chambers</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-02-10"
+      data-searchable="board of water commissioners — 2/10/2026 at 12:00 pm meeting body: board of water commissioners | time: 12:00 pm | location: room 40 city hall room 40 city hall"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1389196&amp;GUID=DA2353B9-C4C7-4DFC-B0AF-FEB0E4191CA2" target="_blank" rel="noopener">Board of Water Commissioners — 2/10/2026 at 12:00 PM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-02-10
+         &nbsp;·&nbsp; Room 40 City Hall
+      </div>
+      
+      <div class="item-desc">Meeting body: Board of Water Commissioners | Time: 12:00 PM | Location: Room 40 City Hall</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-02-10"
+      data-searchable="legislative hearings — 2/10/2026 at 9:00 am meeting body: legislative hearings | time: 9:00 am | location: room 330 city hall &amp; court house/remote room 330 city hall &amp; court house/remote"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1387802&amp;GUID=A3AF350A-AFDE-49DD-96B7-9F7CC549EE3C" target="_blank" rel="noopener">Legislative Hearings — 2/10/2026 at 9:00 AM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-02-10
+         &nbsp;·&nbsp; Room 330 City Hall &amp; Court House/Remote
+      </div>
+      
+      <div class="item-desc">Meeting body: Legislative Hearings | Time: 9:00 AM | Location: Room 330 City Hall &amp; Court House/Remote</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2026-02-06"
       data-searchable="planning commission — feb 06, 2026 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -356,8 +1056,349 @@
     <div
       class="item-card "
       data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-02-04"
+      data-searchable="city council — 2/4/2026 at 3:30 pm meeting body: city council | time: 3:30 pm | location: council chambers - 3rd floor council chambers - 3rd floor"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1386105&amp;GUID=4EF2BE58-CA14-4F05-85A5-EBD906BD5928" target="_blank" rel="noopener">City Council — 2/4/2026 at 3:30 PM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-02-04
+         &nbsp;·&nbsp; Council Chambers - 3rd Floor
+      </div>
+      
+      <div class="item-desc">Meeting body: City Council | Time: 3:30 PM | Location: Council Chambers - 3rd Floor</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-02-04"
+      data-searchable="housing &amp; redevelopment authority — 2/4/2026 at 2:00 pm meeting body: housing &amp; redevelopment authority | time: 2:00 pm | location: council chambers, city hall council chambers, city hall"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1386192&amp;GUID=C0D887D5-4854-4FE2-A380-817C98A45DCC" target="_blank" rel="noopener">Housing &amp; Redevelopment Authority — 2/4/2026 at 2:00 PM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-02-04
+         &nbsp;·&nbsp; Council Chambers, City Hall
+      </div>
+      
+      <div class="item-desc">Meeting body: Housing &amp; Redevelopment Authority | Time: 2:00 PM | Location: Council Chambers, City Hall</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-02-04"
+      data-searchable="library board — 2/4/2026 at 1:00 pm meeting body: library board | time: 1:00 pm | location: council chambers council chambers"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1385339&amp;GUID=291BF0F8-7B62-4224-92EC-9BFB2C705120" target="_blank" rel="noopener">Library Board — 2/4/2026 at 1:00 PM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-02-04
+         &nbsp;·&nbsp; Council Chambers
+      </div>
+      
+      <div class="item-desc">Meeting body: Library Board | Time: 1:00 PM | Location: Council Chambers</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-02-04"
+      data-searchable="organizational committee — 2/4/2026 at 10:00 am meeting body: organizational committee | time: 10:00 am | location: council chambers council chambers"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1386156&amp;GUID=32A5BD1C-F673-427E-8CAA-AF604899E011" target="_blank" rel="noopener">Organizational Committee — 2/4/2026 at 10:00 AM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-02-04
+         &nbsp;·&nbsp; Council Chambers
+      </div>
+      
+      <div class="item-desc">Meeting body: Organizational Committee | Time: 10:00 AM | Location: Council Chambers</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-02-03"
+      data-searchable="legislative hearings — 2/3/2026 at 9:00 am meeting body: legislative hearings | time: 9:00 am | location: room 330 city hall &amp; court house/remote room 330 city hall &amp; court house/remote"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1386141&amp;GUID=70021446-8EB3-4BE9-9969-D68FFF6EF948" target="_blank" rel="noopener">Legislative Hearings — 2/3/2026 at 9:00 AM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-02-03
+         &nbsp;·&nbsp; Room 330 City Hall &amp; Court House/Remote
+      </div>
+      
+      <div class="item-desc">Meeting body: Legislative Hearings | Time: 9:00 AM | Location: Room 330 City Hall &amp; Court House/Remote</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-01-28"
+      data-searchable="city council — 1/28/2026 at 3:30 pm meeting body: city council | time: 3:30 pm | location: council chambers - 3rd floor council chambers - 3rd floor"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1382054&amp;GUID=BF77F226-B473-4040-8028-F4638592271B" target="_blank" rel="noopener">City Council — 1/28/2026 at 3:30 PM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-01-28
+         &nbsp;·&nbsp; Council Chambers - 3rd Floor
+      </div>
+      
+      <div class="item-desc">Meeting body: City Council | Time: 3:30 PM | Location: Council Chambers - 3rd Floor</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-01-28"
+      data-searchable="housing &amp; redevelopment authority — 1/28/2026 at 2:00 pm meeting body: housing &amp; redevelopment authority | time: 2:00 pm | location: council chambers, city hallhra chair cheniqua johnson will be participating remotely. council chambers, city hallhra chair cheniqua johnson will be participating remotely."
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1381926&amp;GUID=A4F13747-F8C6-4897-AEA4-1916B278913C" target="_blank" rel="noopener">Housing &amp; Redevelopment Authority — 1/28/2026 at 2:00 PM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-01-28
+         &nbsp;·&nbsp; Council Chambers, City HallHRA Chair Cheniqua Johnson will be participating remotely.
+      </div>
+      
+      <div class="item-desc">Meeting body: Housing &amp; Redevelopment Authority | Time: 2:00 PM | Location: Council Chambers, City HallHRA Chair Cheniqua Johnson will be participating remotely.</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-01-28"
+      data-searchable="public safety committee — 1/28/2026 at 1:00 pm meeting body: public safety committee | time: 1:00 pm | location: council chambers, city hall council chambers, city hall"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1382113&amp;GUID=1DE9F362-469A-433D-9A95-6786425E7EF9" target="_blank" rel="noopener">Public Safety Committee — 1/28/2026 at 1:00 PM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-01-28
+         &nbsp;·&nbsp; Council Chambers, City Hall
+      </div>
+      
+      <div class="item-desc">Meeting body: Public Safety Committee | Time: 1:00 PM | Location: Council Chambers, City Hall</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-01-28"
+      data-searchable="city council — 1/28/2026 at 11:00 am meeting body: city council | time: 11:00 am | location: council chambers - 3rd floorclosed door meeting of the city council pursuant to minnesota statutes section 13d.05, subdivision 3(b) to discuss pending litigation in davison v. city of saint paul. council chambers - 3rd floorclosed door meeting of the city council pursuant to minnesota statutes section 13d.05, subdivision 3(b) to discuss pending litigation in davison v. city of saint paul."
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1382328&amp;GUID=46BFE866-C32B-4FEE-A782-287FB7F3674F" target="_blank" rel="noopener">City Council — 1/28/2026 at 11:00 AM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-01-28
+         &nbsp;·&nbsp; Council Chambers - 3rd FloorClosed door meeting of the City Council pursuant to Minnesota Statutes Section 13D.05, subdivision 3(b) to discuss pending litigation in Davison v. City of Saint Paul.
+      </div>
+      
+      <div class="item-desc">Meeting body: City Council | Time: 11:00 AM | Location: Council Chambers - 3rd FloorClosed door meeting of the City Council pursuant to Minnesota Statutes Section 13D.05, subdivision 3(b) to discuss pending litigation in Davison v. City of Saint Paul.</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-01-27"
+      data-searchable="legislative hearings — 1/27/2026 at 9:00 am meeting body: legislative hearings | time: 9:00 am | location: room 330 city hall &amp; court house/remote room 330 city hall &amp; court house/remote"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1382022&amp;GUID=D24089F1-4677-4E43-9BD7-6C614388C897" target="_blank" rel="noopener">Legislative Hearings — 1/27/2026 at 9:00 AM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-01-27
+         &nbsp;·&nbsp; Room 330 City Hall &amp; Court House/Remote
+      </div>
+      
+      <div class="item-desc">Meeting body: Legislative Hearings | Time: 9:00 AM | Location: Room 330 City Hall &amp; Court House/Remote</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2026-01-23"
       data-searchable="[canceled] planning commission — jan 23, 2026 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -389,8 +1430,349 @@
     <div
       class="item-card "
       data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-01-21"
+      data-searchable="city council — 1/21/2026 at 3:30 pm meeting body: city council | time: 3:30 pm | location: council chambers - 3rd floor council chambers - 3rd floor"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1379522&amp;GUID=84660699-4823-4644-BC39-99CFA3606D93" target="_blank" rel="noopener">City Council — 1/21/2026 at 3:30 PM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-01-21
+         &nbsp;·&nbsp; Council Chambers - 3rd Floor
+      </div>
+      
+      <div class="item-desc">Meeting body: City Council | Time: 3:30 PM | Location: Council Chambers - 3rd Floor</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-01-21"
+      data-searchable="housing &amp; redevelopment authority — 1/21/2026 at 2:00 pm meeting body: housing &amp; redevelopment authority | time: 2:00 pm | location: council chambers, city hall council chambers, city hall"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1379560&amp;GUID=43C5427B-D9C1-4074-9D2D-35830181D4B3" target="_blank" rel="noopener">Housing &amp; Redevelopment Authority — 1/21/2026 at 2:00 PM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-01-21
+         &nbsp;·&nbsp; Council Chambers, City Hall
+      </div>
+      
+      <div class="item-desc">Meeting body: Housing &amp; Redevelopment Authority | Time: 2:00 PM | Location: Council Chambers, City Hall</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-01-21"
+      data-searchable="organizational committee — 1/21/2026 at 10:00 am meeting body: organizational committee | time: 10:00 am | location: council chambers council chambers"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1379646&amp;GUID=F472B006-9587-4843-85E2-09A41D7BF103" target="_blank" rel="noopener">Organizational Committee — 1/21/2026 at 10:00 AM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-01-21
+         &nbsp;·&nbsp; Council Chambers
+      </div>
+      
+      <div class="item-desc">Meeting body: Organizational Committee | Time: 10:00 AM | Location: Council Chambers</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-01-20"
+      data-searchable="legislative hearings — 1/20/2026 at 9:00 am meeting body: legislative hearings | time: 9:00 am | location: room 330 city hall &amp; court house/remote room 330 city hall &amp; court house/remote"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1379565&amp;GUID=0D3BCA9B-C535-4659-9D7E-845E7026D9BF" target="_blank" rel="noopener">Legislative Hearings — 1/20/2026 at 9:00 AM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-01-20
+         &nbsp;·&nbsp; Room 330 City Hall &amp; Court House/remote
+      </div>
+      
+      <div class="item-desc">Meeting body: Legislative Hearings | Time: 9:00 AM | Location: Room 330 City Hall &amp; Court House/remote</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-01-14"
+      data-searchable="city council — 1/14/2026 at 3:30 pm meeting body: city council | time: 3:30 pm | location: council chambers - 3rd floor council chambers - 3rd floor"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1376434&amp;GUID=80AAF1F7-71FC-47E7-9AF3-A544E10C6A4E" target="_blank" rel="noopener">City Council — 1/14/2026 at 3:30 PM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-01-14
+         &nbsp;·&nbsp; Council Chambers - 3rd Floor
+      </div>
+      
+      <div class="item-desc">Meeting body: City Council | Time: 3:30 PM | Location: Council Chambers - 3rd Floor</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-01-14"
+      data-searchable="housing &amp; redevelopment authority — 1/14/2026 at 2:00 pm meeting body: housing &amp; redevelopment authority | time: 2:00 pm | location: council chambers, city hall council chambers, city hall"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1376954&amp;GUID=2A4CF78B-2FD2-4A3A-87B8-BFF8EB2F5234" target="_blank" rel="noopener">Housing &amp; Redevelopment Authority — 1/14/2026 at 2:00 PM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-01-14
+         &nbsp;·&nbsp; Council Chambers, City Hall
+      </div>
+      
+      <div class="item-desc">Meeting body: Housing &amp; Redevelopment Authority | Time: 2:00 PM | Location: Council Chambers, City Hall</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-01-14"
+      data-searchable="library board — 1/14/2026 at 1:00 pm meeting body: library board | time: 1:00 pm | location: council chambers council chambers"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1373621&amp;GUID=EF6915B6-AE71-4B64-A7C7-43771CC0C337" target="_blank" rel="noopener">Library Board — 1/14/2026 at 1:00 PM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-01-14
+         &nbsp;·&nbsp; Council Chambers
+      </div>
+      
+      <div class="item-desc">Meeting body: Library Board | Time: 1:00 PM | Location: Council Chambers</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-01-14"
+      data-searchable="organizational committee — 1/14/2026 at 10:00 am meeting body: organizational committee | time: 10:00 am | location: council chambers council chambers"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1376389&amp;GUID=1CDE769E-943E-471B-9931-C1117F8E6679" target="_blank" rel="noopener">Organizational Committee — 1/14/2026 at 10:00 AM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-01-14
+         &nbsp;·&nbsp; Council Chambers
+      </div>
+      
+      <div class="item-desc">Meeting body: Organizational Committee | Time: 10:00 AM | Location: Council Chambers</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-01-13"
+      data-searchable="board of water commissioners — 1/13/2026 at 12:00 pm meeting body: board of water commissioners | time: 12:00 pm | location: room 40 city hall room 40 city hall"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1376900&amp;GUID=081F9CBC-4914-4513-8D3B-46CA72CD246C" target="_blank" rel="noopener">Board of Water Commissioners — 1/13/2026 at 12:00 PM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-01-13
+         &nbsp;·&nbsp; Room 40 City Hall
+      </div>
+      
+      <div class="item-desc">Meeting body: Board of Water Commissioners | Time: 12:00 PM | Location: Room 40 City Hall</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-01-13"
+      data-searchable="legislative hearings — 1/13/2026 at 9:00 am meeting body: legislative hearings | time: 9:00 am | location: room 330 city hall &amp; court house/remote room 330 city hall &amp; court house/remote"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1376576&amp;GUID=E95F436B-49FB-420E-8ADB-EBD9910AAF8B" target="_blank" rel="noopener">Legislative Hearings — 1/13/2026 at 9:00 AM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-01-13
+         &nbsp;·&nbsp; Room 330 City Hall &amp; Court House/Remote
+      </div>
+      
+      <div class="item-desc">Meeting body: Legislative Hearings | Time: 9:00 AM | Location: Room 330 City Hall &amp; Court House/Remote</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2026-01-09"
       data-searchable="planning commission — jan 09, 2026 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -422,8 +1804,145 @@
     <div
       class="item-card "
       data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-01-07"
+      data-searchable="city council — 1/7/2026 at 3:30 pm meeting body: city council | time: 3:30 pm | location: council chambers - 3rd floor council chambers - 3rd floor"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1373618&amp;GUID=23EA02CB-5DB5-409D-8323-BF0F383C8F2F" target="_blank" rel="noopener">City Council — 1/7/2026 at 3:30 PM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-01-07
+         &nbsp;·&nbsp; Council Chambers - 3rd Floor
+      </div>
+      
+      <div class="item-desc">Meeting body: City Council | Time: 3:30 PM | Location: Council Chambers - 3rd Floor</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-01-07"
+      data-searchable="housing &amp; redevelopment authority — 1/7/2026 at 2:00 pm meeting body: housing &amp; redevelopment authority | time: 2:00 pm | location: council chambers, city hall council chambers, city hall"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1373698&amp;GUID=7B3FF1FD-4BD1-4B69-A54B-D6DC143004A9" target="_blank" rel="noopener">Housing &amp; Redevelopment Authority — 1/7/2026 at 2:00 PM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-01-07
+         &nbsp;·&nbsp; Council Chambers, City Hall
+      </div>
+      
+      <div class="item-desc">Meeting body: Housing &amp; Redevelopment Authority | Time: 2:00 PM | Location: Council Chambers, City Hall</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-01-07"
+      data-searchable="organizational committee — 1/7/2026 at 10:00 am meeting body: organizational committee | time: 10:00 am | location: legislative hearing room 330 legislative hearing room 330"
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1373232&amp;GUID=D1EFE1AA-727F-42F1-A1A4-7C65864C869C" target="_blank" rel="noopener">Organizational Committee — 1/7/2026 at 10:00 AM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-01-07
+         &nbsp;·&nbsp; Legislative Hearing Room 330
+      </div>
+      
+      <div class="item-desc">Meeting body: Organizational Committee | Time: 10:00 AM | Location: Legislative Hearing Room 330</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
+      data-source="Saint Paul Legistar"
+      data-flagged="unflagged"
+      data-date="2026-01-06"
+      data-searchable="legislative hearings — 1/6/2026 at 9:00 am meeting body: legislative hearings | time: 9:00 am | location: room 330 city hall &amp; court house/remotehearing starts at 10:00 a.m. room 330 city hall &amp; court house/remotehearing starts at 10:00 a.m."
+    >
+      <div class="item-header">
+        <div class="item-title">
+          
+          <a href="https://stpaul.legistar.com/View.ashx?M=A&amp;ID=1373142&amp;GUID=D82E8ECD-9CDC-43AE-9EDD-02B8FE84F002" target="_blank" rel="noopener">Legislative Hearings — 1/6/2026 at 9:00 AM</a>
+          
+        </div>
+        <div class="badges">
+          
+          
+          <span class="badge badge-hearing">Hearing</span>
+          
+          
+          <span class="badge badge-source">Saint Paul Legistar</span>
+          
+        </div>
+      </div>
+      <div class="item-meta">
+        2026-01-06
+         &nbsp;·&nbsp; Room 330 City Hall &amp; Court House/RemoteHearing starts at 10:00 a.m.
+      </div>
+      
+      <div class="item-desc">Meeting body: Legislative Hearings | Time: 9:00 AM | Location: Room 330 City Hall &amp; Court House/RemoteHearing starts at 10:00 a.m.</div>
+      
+      
+    </div>
+    
+    <div
+      class="item-card "
+      data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2025-12-19"
       data-searchable="[canceled] planning commission — dec 19, 2025 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -457,6 +1976,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2025-12-05"
       data-searchable="planning commission — dec 05, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -490,6 +2010,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2025-11-14"
       data-searchable="planning commission — nov 14, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -523,6 +2044,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2025-10-31"
       data-searchable="[canceled] planning commission — oct 31, 2025 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -556,6 +2078,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2025-10-17"
       data-searchable="planning commission — oct 17, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -589,6 +2112,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2025-10-09"
       data-searchable="[special] planning commission — oct 09, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -622,6 +2146,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2025-10-03"
       data-searchable="[canceled] planning commission — oct 03, 2025 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -655,6 +2180,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2025-09-19"
       data-searchable="planning commission — sep 19, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -688,6 +2214,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2025-09-05"
       data-searchable="planning commission — sep 05, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -721,6 +2248,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2025-08-22"
       data-searchable="planning commission — aug 22, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -754,6 +2282,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2025-08-08"
       data-searchable="[canceled] planning commission — aug 08, 2025 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -787,6 +2316,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2025-07-25"
       data-searchable="planning commission — jul 25, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -820,6 +2350,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2025-07-11"
       data-searchable="planning commission — jul 11, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -853,6 +2384,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2025-06-27"
       data-searchable="[canceled] planning commission — jun 27, 2025 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -886,6 +2418,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2025-06-13"
       data-searchable="[canceled] planning commission — jun 13, 2025 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -919,6 +2452,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2025-05-30"
       data-searchable="planning commission — may 30, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -952,6 +2486,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2025-05-16"
       data-searchable="planning commission — may 16, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -985,6 +2520,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2025-05-02"
       data-searchable="planning commission — may 02, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -1018,6 +2554,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2025-04-18"
       data-searchable="planning commission — apr 18, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -1051,6 +2588,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2025-04-04"
       data-searchable="planning commission — apr 04, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -1084,6 +2622,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2025-03-21"
       data-searchable="planning commission — mar 21, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -1117,6 +2656,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2025-03-07"
       data-searchable="planning commission — mar 07, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -1150,6 +2690,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2025-02-21"
       data-searchable="planning commission — feb 21, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -1183,6 +2724,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2025-02-07"
       data-searchable="planning commission — feb 07, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -1216,6 +2758,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2025-01-24"
       data-searchable="planning commission — jan 24, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -1249,6 +2792,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2025-01-10"
       data-searchable="planning commission — jan 10, 2025 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -1282,6 +2826,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2024-12-27"
       data-searchable="[canceled] planning commission — dec 27, 2024 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -1315,6 +2860,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2024-12-13"
       data-searchable="planning commission — dec 13, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -1348,6 +2894,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2024-11-15"
       data-searchable="planning commission — nov 15, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -1381,6 +2928,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2024-10-25"
       data-searchable="[canceled] planning commission — oct 25, 2024 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -1414,6 +2962,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2024-10-11"
       data-searchable="planning commission — oct 11, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -1447,6 +2996,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2024-09-27"
       data-searchable="planning commission — sep 27, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -1480,6 +3030,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2024-09-13"
       data-searchable="planning commission — sep 13, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -1513,6 +3064,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2024-08-30"
       data-searchable="[canceled] planning commission — aug 30, 2024 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -1546,6 +3098,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2024-08-16"
       data-searchable="planning commission — aug 16, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -1579,6 +3132,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2024-08-02"
       data-searchable="planning commission — aug 02, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -1612,6 +3166,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2024-07-19"
       data-searchable="planning commission — jul 19, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -1645,6 +3200,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2024-06-21"
       data-searchable="planning commission — jun 21, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -1678,6 +3234,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2024-06-07"
       data-searchable="planning commission — jun 07, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -1711,6 +3268,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2024-05-24"
       data-searchable="[canceled] planning commission — may 24, 2024 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -1744,6 +3302,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2024-05-10"
       data-searchable="planning commission — may 10, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -1777,6 +3336,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2024-04-26"
       data-searchable="[canceled] planning commission — apr 26, 2024 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -1810,6 +3370,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2024-04-12"
       data-searchable="planning commission — apr 12, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -1843,6 +3404,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2024-03-29"
       data-searchable="planning commission — mar 29, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -1876,6 +3438,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2024-03-15"
       data-searchable="planning commission — mar 15, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -1909,6 +3472,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2024-03-01"
       data-searchable="planning commission — mar 01, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -1942,6 +3506,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2024-02-16"
       data-searchable="planning commission — feb 16, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -1975,6 +3540,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2024-02-02"
       data-searchable="planning commission — feb 02, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -2008,6 +3574,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2024-01-19"
       data-searchable="planning commission — jan 19, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -2041,6 +3608,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2024-01-05"
       data-searchable="planning commission — jan 05, 2024 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -2074,6 +3642,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2023-12-22"
       data-searchable="planning commission — dec 22, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -2107,6 +3676,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2023-12-08"
       data-searchable="planning commission — dec 08, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -2140,6 +3710,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2023-11-17"
       data-searchable="planning commission — nov 17, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -2173,6 +3744,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2023-10-27"
       data-searchable="planning commission — oct 27, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -2206,6 +3778,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2023-10-13"
       data-searchable="planning commission — oct 13, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -2239,6 +3812,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2023-09-29"
       data-searchable="planning commission — sep 29, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -2272,6 +3846,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2023-09-15"
       data-searchable="planning commission — sep 15, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -2305,6 +3880,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2023-09-01"
       data-searchable="planning commission — sep 01, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -2338,6 +3914,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2023-08-18"
       data-searchable="planning commission — aug 18, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -2371,6 +3948,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2023-08-04"
       data-searchable="planning commission — aug 04, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -2404,6 +3982,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2023-07-21"
       data-searchable="[canceled] planning commission — jul 21, 2023 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -2437,6 +4016,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2023-07-07"
       data-searchable="planning commission — jul 07, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -2470,6 +4050,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2023-06-23"
       data-searchable="planning commission — jun 23, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -2503,6 +4084,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2023-06-09"
       data-searchable="planning commission — jun 09, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -2536,6 +4118,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2023-05-26"
       data-searchable="planning commission — may 26, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -2569,6 +4152,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2023-05-12"
       data-searchable="planning commission — may 12, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -2602,6 +4186,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2023-04-28"
       data-searchable="planning commission — apr 28, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -2635,6 +4220,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2023-04-14"
       data-searchable="planning commission — apr 14, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -2668,6 +4254,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2023-03-31"
       data-searchable="[canceled] planning commission — mar 31, 2023 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -2701,6 +4288,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2023-03-17"
       data-searchable="planning commission — mar 17, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -2734,6 +4322,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2023-03-03"
       data-searchable="planning commission — mar 03, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -2767,6 +4356,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2023-02-17"
       data-searchable="planning commission — feb 17, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -2800,6 +4390,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2023-02-03"
       data-searchable="planning commission — feb 03, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -2833,6 +4424,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2023-01-20"
       data-searchable="planning commission — jan 20, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -2866,6 +4458,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2023-01-06"
       data-searchable="planning commission — jan 06, 2023 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -2899,6 +4492,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2022-12-23"
       data-searchable="[canceled] planning commission — dec 23, 2022 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -2932,6 +4526,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2022-12-09"
       data-searchable="planning commission — dec 09, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -2965,6 +4560,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2022-11-18"
       data-searchable="planning commission — nov 18, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -2998,6 +4594,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2022-10-28"
       data-searchable="planning commission — oct 28, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -3031,6 +4628,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2022-10-14"
       data-searchable="planning commission — oct 14, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -3064,6 +4662,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2022-09-30"
       data-searchable="[canceled] planning commission — sep 30, 2022 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -3097,6 +4696,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2022-09-16"
       data-searchable="planning commission — sep 16, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -3130,6 +4730,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2022-09-02"
       data-searchable="[canceled] planning commission — sep 02, 2022 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -3163,6 +4764,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2022-08-19"
       data-searchable="planning commission — aug 19, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -3196,6 +4798,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2022-08-05"
       data-searchable="[canceled] planning commission — aug 05, 2022 saint paul planning commission meeting. this meeting was canceled. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -3229,6 +4832,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2022-07-22"
       data-searchable="planning commission — jul 22, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -3262,6 +4866,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2022-07-08"
       data-searchable="planning commission — jul 08, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -3295,6 +4900,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2022-06-24"
       data-searchable="planning commission — jun 24, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -3328,6 +4934,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2022-06-10"
       data-searchable="planning commission — jun 10, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -3361,6 +4968,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2022-05-27"
       data-searchable="planning commission — may 27, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -3394,6 +5002,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2022-05-13"
       data-searchable="planning commission — may 13, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -3427,6 +5036,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2022-04-29"
       data-searchable="planning commission — apr 29, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -3460,6 +5070,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2022-04-15"
       data-searchable="planning commission — apr 15, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -3493,6 +5104,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2022-04-01"
       data-searchable="planning commission — apr 01, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -3526,6 +5138,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2022-03-18"
       data-searchable="planning commission — mar 18, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -3559,6 +5172,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2022-03-04"
       data-searchable="planning commission — mar 04, 2022 saint paul planning commission meeting. agenda pdf available at the link. "
     >
       <div class="item-header">
@@ -3592,6 +5206,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2022-02-18"
       data-searchable="planning commission meeting saint paul planning commission upcoming meeting. agenda link available. "
     >
       <div class="item-header">
@@ -3625,6 +5240,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2022-02-04"
       data-searchable="planning commission meeting saint paul planning commission upcoming meeting. agenda link available. "
     >
       <div class="item-header">
@@ -3658,6 +5274,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2022-01-21"
       data-searchable="planning commission meeting saint paul planning commission upcoming meeting. agenda link available. "
     >
       <div class="item-header">
@@ -3691,6 +5308,7 @@
       data-category="hearing"
       data-source="Saint Paul Planning Commission"
       data-flagged="unflagged"
+      data-date="2022-01-07"
       data-searchable="planning commission meeting saint paul planning commission upcoming meeting. agenda link available. "
     >
       <div class="item-header">
@@ -3726,30 +5344,43 @@
 </main>
 
 <footer>
-  Data sourced from City of Saint Paul, Ramsey County, MnDOT, and Metro Transit public records.
+  Data sourced from Saint Paul Planning Commission (Granicus) and Saint Paul Legistar.
   &nbsp;·&nbsp;
   <a href="https://www.summituniversityplanningcouncil.org" target="_blank" rel="noopener">Summit University Planning Council</a>
   &nbsp;·&nbsp;
-  <a href="https://github.com/summituniversityplanningcouncil/neighborhood-monitor" target="_blank" rel="noopener">View on GitHub</a>
+  <a href="https://github.com/jcsouthworth/summit-university-monitor" target="_blank" rel="noopener">View on GitHub</a>
 </footer>
 
 <script>
-  // ── Client-side filtering (no dependencies) ──────────────────────────────
+  // ── Client-side filtering ─────────────────────────────────────────────────
   function applyFilters() {
-    const search   = document.getElementById("search-input").value.toLowerCase();
-    const cat      = document.getElementById("cat-filter").value.toLowerCase();
-    const src      = document.getElementById("src-filter").value;
-    const flagged  = document.getElementById("flag-filter").value;
-    const cards    = document.querySelectorAll("#item-list .item-card");
+    const search  = document.getElementById("search-input").value.toLowerCase();
+    const time    = document.getElementById("time-filter").value;   // "upcoming" | "past" | ""
+    const src     = document.getElementById("src-filter").value;
+    const cat     = document.getElementById("cat-filter").value.toLowerCase();
+    const flagged = document.getElementById("flag-filter").value;
+    const cards   = document.querySelectorAll("#item-list .item-card");
 
     let visible = 0;
     cards.forEach(card => {
-      const matchSearch   = !search   || card.dataset.searchable.includes(search);
-      const matchCat      = !cat      || card.dataset.category === cat;
-      const matchSrc      = !src      || card.dataset.source === src;
-      const matchFlagged  = !flagged  || card.dataset.flagged === flagged;
+      const cardDate = card.dataset.date || "";
 
-      const show = matchSearch && matchCat && matchSrc && matchFlagged;
+      // Date comparison: YYYY-MM-DD strings sort lexicographically
+      const isPast     = cardDate && cardDate < TODAY;
+      const isUpcoming = cardDate && cardDate >= TODAY;
+
+      const matchTime    = !time
+                           || (time === "upcoming" && isUpcoming)
+                           || (time === "past"     && isPast);
+      const matchSearch  = !search  || card.dataset.searchable.includes(search);
+      const matchSrc     = !src     || card.dataset.source === src;
+      const matchCat     = !cat     || card.dataset.category === cat;
+      const matchFlagged = !flagged || card.dataset.flagged === flagged;
+
+      // Visually dim past items even when shown
+      card.classList.toggle("is-past", !!isPast);
+
+      const show = matchTime && matchSearch && matchSrc && matchCat && matchFlagged;
       card.style.display = show ? "" : "none";
       if (show) visible++;
     });
@@ -3758,7 +5389,7 @@
     countEl.textContent = `Showing ${visible} of ${cards.length} items`;
   }
 
-  // Initialize count on load
+  // Default: show upcoming only on page load
   document.addEventListener("DOMContentLoaded", applyFilters);
 </script>
 
